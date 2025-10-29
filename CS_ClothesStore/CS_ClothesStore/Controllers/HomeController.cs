@@ -30,11 +30,11 @@ namespace CS_ClothesStore.Controllers
             var token = HttpContext.Session.GetString("JWTToken");
             var userJson = HttpContext.Session.GetString("UserInfo");
 
-            ////if(string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userJson))
-            ////{
-            ////    return RedirectToAction("Login", "Authentication");
-            ////}
-            ///
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userJson))
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
             var viewModel = new HomeViewModel
             {
                 Products = new List<ProductDTO>(),

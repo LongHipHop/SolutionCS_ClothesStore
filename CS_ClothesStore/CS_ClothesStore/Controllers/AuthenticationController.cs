@@ -155,6 +155,45 @@ namespace CS_ClothesStore.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                var accessToken = HttpContext.Session.GetString("JWTToken") ?? "";
+
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    var request = new HttpRequestMessage(HttpMethod.Post, $"{_apiUrl}/Aauthetication/Logout");
+                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+                    var response = await _httpClient.SendAsync(request);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("Warning: API Logout failed.");
+                    }
+                }
+
+                HttpContext.Session.Clear();
+
+                _httpClient.DefaultRequestHeaders.Clear();
+
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                TempData["Message"] = "You have been logged out!";
+                TempData["MessageType"] = "success";
+
+                return RedirectToAction("Login", "Authentication");
+            }
+            catch(Exception ex)
+            {
+                TempData["Message"] = "Logout failed: " + ex.Message;
+                TempData["MessageType"] = "error";
+                return RedirectToAction("Login", "Authentication");
+            }
+        }
+
         [HttpGet]
         public IActionResult ForgotPassword()
         {
