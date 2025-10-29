@@ -13,5 +13,11 @@ namespace APIService.Service.Interface
 
         Task<bool> SendForGotPasswordEmailAsync(string email);
         Task<bool> ResetPasswordAsync(string email, string token, string newPassword);
+
+        Task<(ApplicationUser, int)> LoginByGoogle(GoogleAccountDTO model);
+
+        Task<(ApplicationUser, int)> Register(AccountCUDTO model);
+        Task<int> ConfirmEmailAsync(string email, string token);
+        Task<int> ResendConfirmationEmailAsync(string email);
     }
 }

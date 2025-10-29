@@ -16,5 +16,9 @@ namespace APIService.Repository.Interface
         //Profile
 
         Task UpdatePasswordAsync(Accounts accounts, string newHashedPassword);
+        Task<Accounts> CreateByGoogleAsync(GoogleAccountDTO dto);
+
+
+        Task<IEnumerable<Accounts>> GetWaitingAccountsOlderThanAsync(int hours);
     }
 }

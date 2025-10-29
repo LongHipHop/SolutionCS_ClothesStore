@@ -1,4 +1,5 @@
-﻿using APIService.Models.DTOs;
+﻿using APIService.Models;
+using APIService.Models.DTOs;
 
 namespace APIService.Service.Interface
 {
@@ -13,5 +14,7 @@ namespace APIService.Service.Interface
         Task<int> RegisterAsync(AccountCUDTO accountCreate);
         Task<(AccountDTO, int)> GetAccountByToken(string token);
         Task<int> UpdateTokenOnLoginAsync(AccountCUDTO accountUpdate);
+
+        Task<Accounts> LoginWithGoogleAsync(GoogleAccountDTO dto);
     }
 }

@@ -1,4 +1,5 @@
 using CS_ClothesStore.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -40,13 +41,14 @@ AddCookie(options =>
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(3);
-    options.LoginPath = "/";
-    options.AccessDeniedPath = "/";
+    options.LoginPath = "/Authentication/Login";
+    options.AccessDeniedPath = "/Authentication/AccessDenied";
 })
 .AddGoogle("Google", options =>
 {
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.ClaimActions.MapJsonKey("picture", "picture", "url");
     options.CallbackPath = "/signin-google";
 })
 .AddJwtBearer("Jwt", options =>

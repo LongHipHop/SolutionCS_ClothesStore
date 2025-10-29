@@ -15,7 +15,7 @@ namespace APIService.Repository.Implementations
         private IPaymentRepository _paymentRepository;
         private IOrderRepository _orderRepository;
         private IPasswordResetRepository _passwordResetRepository;
-
+        private IEmailVerificationRepository _emailVerificationRepository;
 
         public RepositoryManager(ShopDbContext db)
         {
@@ -128,6 +128,18 @@ namespace APIService.Repository.Implementations
                     _passwordResetRepository = new PasswordResetRepository(_db);
                 }
                 return _passwordResetRepository;
+            }
+        }
+
+        public IEmailVerificationRepository EmailVerificationRepository
+        {
+            get
+            {
+                if(_emailVerificationRepository == null)
+                {
+                    _emailVerificationRepository = new EmailVerificationRepository(_db);
+                }
+                return _emailVerificationRepository;
             }
         }
     }

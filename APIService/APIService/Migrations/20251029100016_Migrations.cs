@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CS_ClothesStore.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace APIService.Migrations
 {
     /// <inheritdoc />
     public partial class Migrations : Migration
@@ -35,6 +37,22 @@ namespace CS_ClothesStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Colors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmailVerification",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ExpireAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsUsed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailVerification", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,11 +150,11 @@ namespace CS_ClothesStore.Migrations
                     Fullname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(72)", maxLength: 72, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     RoleId = table.Column<int>(type: "int", nullable: false),
                     BirthDay = table.Column<DateOnly>(type: "date", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreateAt = table.Column<DateOnly>(type: "date", nullable: true),
                     UpdateAt = table.Column<DateOnly>(type: "date", nullable: true),
@@ -354,7 +372,7 @@ namespace CS_ClothesStore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Amount = table.Column<double>(type: "float", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     PaymentMethod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PaymentStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
@@ -394,6 +412,139 @@ namespace CS_ClothesStore.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "CategoryName" },
+                values: new object[,]
+                {
+                    { 1, "Shirt" },
+                    { 2, "Pants" },
+                    { 3, "Dress" },
+                    { 4, "Accressory" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Colors",
+                columns: new[] { "Id", "ColorName" },
+                values: new object[,]
+                {
+                    { 1, "White" },
+                    { 2, "Black" },
+                    { 3, "Red" },
+                    { 4, "Blue" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Promotions",
+                columns: new[] { "Id", "Code", "DiscountPercent", "EndDate", "IsActive", "StartDate" },
+                values: new object[,]
+                {
+                    { 1, "SALE10", 10, new DateTime(2025, 10, 31, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, "SALE20", 20, new DateTime(2025, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), "Active", new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "RoleName" },
+                values: new object[,]
+                {
+                    { 1, "ADMIN" },
+                    { 2, "MANAGER" },
+                    { 3, "CONSULTING_STAFF" },
+                    { 4, "SALE_STAFF" },
+                    { 5, "CUSTOMER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Sizes",
+                columns: new[] { "Id", "SizeName" },
+                values: new object[,]
+                {
+                    { 1, "S" },
+                    { 2, "M" },
+                    { 3, "L" },
+                    { 4, "XL" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Accounts",
+                columns: new[] { "Id", "Address", "BirthDay", "CreateAt", "Email", "Fullname", "Gender", "Image", "Password", "Phone", "RefreshToken", "RefreshTokenExpiryTime", "RoleId", "Status", "TokenVersion", "UpdateAt" },
+                values: new object[,]
+                {
+                    { 1, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 10, 29), "truongtranlong23@gmail.com", "Truong Tran Long", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984121", null, null, 1, "Active", 0, new DateOnly(2025, 10, 29) },
+                    { 2, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 10, 29), "longttce171365@fpt.edu.vn", "Tran Thi B", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984122", null, null, 4, "Active", 0, new DateOnly(2025, 10, 29) },
+                    { 3, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 10, 29), "customer@shop.com", "Phạm Văn C", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984123", null, null, 5, "Active", 0, new DateOnly(2025, 10, 29) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "CreatedAt", "Description", "Discount", "Image", "Price", "ProductName", "StockQuantity", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo sơ mi trắng tay dài", 0.0, "product-02.jpg", 250000m, "White Shirt", 10, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, 2, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Quần jean nam ống đứng", 0.0, "product-07.jpg", 400000m, "Blue Jeans", 50, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, 3, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Váy hoa vintage", 0.0, "product-05.jpg", 320000m, "Summer Dress", 32, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo thun cotton", 0.0, "product-14.jpg", 180000m, "Black T-Shirt", 54, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 5, 1, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Áo khoác da cao cấp", 0.0, "product-04.jpg", 750000m, "Leather Jacket", 11, new DateTime(2025, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Carts",
+                columns: new[] { "Id", "AccountId", "CreatedAt" },
+                values: new object[] { 1, 3, new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5831) });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "Id", "AccountId", "Note", "OrderDate", "PaymentMethod", "ShippingAddress", "Status", "TotalPrice" },
+                values: new object[] { 1, 3, "First order", new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5914), "COD", "123 Main St", "Pending", 500000m });
+
+            migrationBuilder.InsertData(
+                table: "ProductPromotions",
+                columns: new[] { "ProductId", "PromotionId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 1 },
+                    { 3, 2 },
+                    { 4, 2 },
+                    { 5, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductVariants",
+                columns: new[] { "Id", "ColorId", "Price", "ProductId", "SizeId", "Stock" },
+                values: new object[,]
+                {
+                    { 1, 1, 250000m, 1, 2, 30 },
+                    { 2, 4, 400000m, 2, 3, 25 },
+                    { 3, 3, 320000m, 3, 2, 15 },
+                    { 4, 2, 180000m, 4, 1, 50 },
+                    { 5, 2, 750000m, 5, 4, 10 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CartItems",
+                columns: new[] { "Id", "CartId", "ProductVariantId", "Quantity" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, 2 },
+                    { 2, 1, 3, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "OrderDetails",
+                columns: new[] { "Id", "OrderId", "ProductVariantsId", "Quantity", "UnitPrice" },
+                values: new object[] { 1, 1, 1, 2, 250000m });
+
+            migrationBuilder.InsertData(
+                table: "Payments",
+                columns: new[] { "Id", "Amount", "OrderId", "PaymentDate", "PaymentMethod", "PaymentStatus" },
+                values: new object[,]
+                {
+                    { 1, 500000m, 1, new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5852), "COD", "Pending" },
+                    { 2, 500000m, 1, new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5854), "Bank Transfer", "Completed" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_Email",
                 table: "Accounts",
@@ -404,7 +555,8 @@ namespace CS_ClothesStore.Migrations
                 name: "IX_Accounts_Phone",
                 table: "Accounts",
                 column: "Phone",
-                unique: true);
+                unique: true,
+                filter: "[Phone] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_RoleId",
@@ -492,6 +644,9 @@ namespace CS_ClothesStore.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CartItems");
+
+            migrationBuilder.DropTable(
+                name: "EmailVerification");
 
             migrationBuilder.DropTable(
                 name: "OrderDetails");

@@ -8,7 +8,12 @@ namespace APIService.Models.AutoMapper
     {
         public AutoMapper()
         {
-            CreateMap<Accounts, AccountDTO>();
+            CreateMap<Accounts, AccountCUDTO>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role != null ? src.Role.RoleName : null))
+                .ReverseMap();
+
+            CreateMap<Accounts, AccountDTO>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role != null ? src.Role.RoleName : null)).ReverseMap(); 
             CreateMap<AccountDTO, AccountCUDTO>();
             CreateMap<AccountCUDTO, Accounts>();
 

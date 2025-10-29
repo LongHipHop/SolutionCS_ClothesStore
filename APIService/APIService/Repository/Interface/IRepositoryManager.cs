@@ -11,5 +11,6 @@
         IPaymentRepository PaymentRepository { get; }
         IOrderRepository OrderRepository { get; }
         IPasswordResetRepository PasswordResetRepository { get; }
+        IEmailVerificationRepository EmailVerificationRepository { get; }
     }
 }

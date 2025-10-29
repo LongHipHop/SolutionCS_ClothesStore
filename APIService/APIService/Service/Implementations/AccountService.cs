@@ -3,6 +3,7 @@ using APIService.Models.DTOs;
 using APIService.Repository.Interface;
 using APIService.Service.Interface;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Update;
 using Org.BouncyCastle.Crypto.Generators;
 
 namespace APIService.Service.Implementations
@@ -93,7 +94,7 @@ namespace APIService.Service.Implementations
                         return (new(), 4);
                     }
                     var accountDto = _mapper.Map<AccountDTO>(accountExist);
-                    if (accountExist.Status == "InActive")
+                    if (accountExist.Status == "InActive" || accountExist.Status == "Blocked" || accountExist.Status == "Waiting")
                     {
                         return (new(), 3);
                     }
@@ -246,6 +247,27 @@ namespace APIService.Service.Implementations
                 Console.WriteLine($"Error: {ex.Message}");
                 return 1;
             }
+        }
+
+        public async Task<Accounts> LoginWithGoogleAsync(GoogleAccountDTO dto)
+        {
+            var account = await _repositoryManager.AccountRepostiory.GetAccountByEmail(dto.Email);
+
+            if (account == null)
+            {
+                account = await _repositoryManager.AccountRepostiory.CreateByGoogleAsync(dto);
+            }
+            else
+            {
+                account.Fullname = dto.Fullname ?? account.Fullname;
+                account.Image = dto.Image ?? account.Image;
+                account.UpdateAt = DateOnly.FromDateTime(DateTime.Now);
+
+                await _repositoryManager.AccountRepostiory.UpdateAsync(account);
+            }
+
+            return account;
+
         }
     }
 }

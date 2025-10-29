@@ -14,6 +14,30 @@ namespace APIService.Repository.Implementations
             return Create(account);
         }
 
+        public async Task<Accounts> CreateByGoogleAsync(GoogleAccountDTO dto)
+        {
+            var existing = await GetAccountByEmail(dto.Email);
+
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            var account = new Accounts
+            {
+                Fullname = dto.Email,
+                Email = dto.Email,
+                Password = "",
+                RoleId = 5,
+                Status = "Active",
+                CreateAt = DateOnly.FromDateTime(DateTime.Now),
+                Image = dto.Image ?? "default-avatar.png"
+            };
+
+            await Create(account);
+            return account;
+        }
+
         public Task DeleteAsync(Accounts account)
         {
             return Delete(account);
@@ -62,6 +86,16 @@ namespace APIService.Repository.Implementations
             accounts.UpdateAt = DateOnly.FromDateTime(DateTime.Now);
             _context.Accounts.Update(accounts);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Accounts>> GetWaitingAccountsOlderThanAsync(int hours)
+        {
+            var threshold = DateTime.Now.AddHours(-hours);
+
+            return await _context.Accounts
+                .Where(a => a.Status == "Waiting" &&
+                            a.CreateAt < DateOnly.FromDateTime(threshold))
+                .ToListAsync();
         }
     }
 }

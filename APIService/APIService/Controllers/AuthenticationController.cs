@@ -100,5 +100,64 @@ namespace APIService.Controllers
 
             return Ok(new { message = "Password reset successful!" });
         }
+
+        [HttpPost("login-google")]
+        public async Task<IActionResult> LoginByGoogle([FromBody] GoogleAccountDTO model)
+        {
+            var result = await _authenticationService.LoginByGoogle(model);
+
+            return result.Item2 switch
+            {
+                0 => Ok(result.Item1),
+                2 => BadRequest("Tài khoản của bạn đã bị khóa."),
+                _ => BadRequest("Đăng nhập Google thất bại.")
+            };
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] AccountCUDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authenticationService.Register(model);
+
+            if (result.Item2 == 0)
+                return Ok(new { message = "Register successful! Please check your email to confirm your account." });
+            if (result.Item2 == 2)
+                return Conflict(new { message = "Email already exists!" });
+
+            return StatusCode(500, new { message = "Internal server error during registration." });
+
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string email, [FromQuery] string token)
+        {
+            var result = await _authenticationService.ConfirmEmailAsync(email, token);
+            return result switch
+            {
+                0 => Ok(new { message = "Email confirmed successfully." }),
+                1 => BadRequest(new { message = "Invalid or used token." }),
+                2 => NotFound(new { message = "Account not found." }),
+                3 => BadRequest(new { message = "Token expired." }),
+                _ => StatusCode(500, new { message = "Server error." })
+            };
+        }
+
+        [HttpPost("resend-confirm-email")]
+        public async Task<IActionResult> ResendConfirmEmail([FromBody] string email)
+        {
+            var result = await _authenticationService.ResendConfirmationEmailAsync(email);
+
+            return result switch
+            {
+                0 => Ok(new { message = "Confirmation email resent successfully." }),
+                1 => StatusCode(500, new { message = "Server error." }),
+                2 => NotFound(new { message = "Account not found." }),
+                3 => BadRequest(new { message = "Account already confirmed." }),
+                _ => BadRequest(new { message = "Unknown error." })
+            };
+        }
     }
 }
