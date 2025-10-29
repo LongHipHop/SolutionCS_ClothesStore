@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+	var jwt = Context.Session.GetString("JWTToken");
+	bool isLoggedIn = !string.IsNullOrEmpty(jwt);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -124,6 +129,30 @@
 						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
 							<i class="zmdi zmdi-favorite-outline"></i>
 						</a>
+
+						<a href="/Profile/Index" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11" title="Profile">
+							<i class="zmdi zmdi-account"></i>
+						</a>
+
+						<ul class="main-menu">
+							@if (isLoggedIn)
+							{
+								<!-- Logout -->
+								<li>
+									<form asp-action="Logout" asp-controller="Authentication" method="post">
+										<button type="submit">Logout</button>
+									</form>
+								</li>
+							}
+							else
+							{
+								<!-- Login -->
+								<li>
+									<a href="/Authentication/Login">Login</a>
+								</li>
+							}
+						</ul>
+						
 					</div>
 				</nav>
 			</div>
