@@ -1,0 +1,10 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CS_ClothesStore.Models.DTOs
+{
+    public class CategoryDTO
+    {
+        public int Id { get; set; }
+        public string CategoryName { get; set; }
+    }
+}
