@@ -18,13 +18,13 @@ namespace CS_ClothesStore.Models
         [Required, StringLength(72)]
         public string Password { get; set; }
         [StringLength(50)]
-        public string Phone {  get; set; }
+        public string? Phone {  get; set; }
         public int RoleId { get; set; }
         public DateOnly? BirthDay { get; set; }
 
         public string Gender { get; set; }
         [StringLength(200)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
         [StringLength(20)]
         public string Status { get; set; } = "Active";
 

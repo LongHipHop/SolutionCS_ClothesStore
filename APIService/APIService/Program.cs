@@ -78,7 +78,8 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
-
+builder.Services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+builder.Services.AddHostedService<EmailCleanupService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

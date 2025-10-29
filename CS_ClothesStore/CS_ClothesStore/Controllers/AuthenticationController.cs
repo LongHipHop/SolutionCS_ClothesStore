@@ -3,8 +3,12 @@ using CS_ClothesStore.Models.DTOs;
 using CS_ClothesStore.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Crypto.Generators;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -115,6 +119,7 @@ namespace CS_ClothesStore.Controllers
                     HttpContext.Session.SetString("UserInfo", JsonSerializer.Serialize(itemUser));
                     HttpContext.Session.SetString("AccountID", itemUser.Id.ToString());
 
+
                     if (rememberMe)
                     {
                         CookieOptions options = new CookieOptions
@@ -125,7 +130,7 @@ namespace CS_ClothesStore.Controllers
                             IsEssential = true
                         };
                         Response.Cookies.Append("RememberEmail", model.Email, options);
-                        Response.Cookies.Append("RememberPass", model.Password, options);
+                        Response.Cookies.Append("RememberPass", BCrypt.Net.BCrypt.HashPassword(model.Password), options);
                     }
                     else
                     {
@@ -212,5 +217,203 @@ namespace CS_ClothesStore.Controllers
             }
             return View(model);
         }
+
+        public IActionResult LoginWithGoogle()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleCallback", "Authentication")
+            };
+
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!result.Succeeded)
+            {
+                TempData["Message"] = "Google login failed";
+                TempData["MessageType"] = "danger";
+                return RedirectToAction("Login");
+            }
+
+            var claims = result.Principal?.Identities?.FirstOrDefault()?.Claims;
+
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var image = claims?.FirstOrDefault(c => c.Type == "picture")?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["Message"] = "Can't get information from Google.";
+                TempData["MessageType"] = "danger";
+                return RedirectToAction("Login");
+            }
+
+            var googleModel = new
+            {
+                Fullname = name,
+                Email = email,
+                image = image,
+            };
+
+            var content = new StringContent(
+                JsonSerializer.Serialize(googleModel),
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            var response = await _httpClient.PostAsync($"{_apiUrl}/Authentication/login-google", content);
+
+            if(!response.IsSuccessStatusCode)
+            {
+                TempData["Message"] = "Google login failed.";
+                TempData["MessageType"] = "danger";
+                return RedirectToAction("Login");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var apiResponse = JsonSerializer.Deserialize<APIResponse<ApplicationUser>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            var user = apiResponse?.Result;
+
+            HttpContext.Session.SetString("UserInfo", JsonSerializer.Serialize(user));
+
+
+            TempData["Message"] = "Google login successfully!";
+            TempData["MessageType"] = "success";
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Message"] = "Please fill in all required fields.";
+                TempData["MessageType"] = "warning";
+                return View(model);
+            }
+
+            if (model.Password != model.ConfirmPassword)
+            {
+                TempData["Message"] = "Passwords do not match!";
+                TempData["MessageType"] = "danger";
+                return View(model);
+            }
+
+            var accountData = new
+            {
+                Fullname = model.Fullname,
+                Email = model.Email,
+                Password = model.Password,
+                RoleName = "CUSTOMER",
+                Status = "Waiting",
+                Gender = "Others",
+                Phone = "",
+                Address = ""
+            };
+
+            var json = JsonSerializer.Serialize(accountData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync($"{_apiUrl}/Authentication/register", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var msg = await response.Content.ReadAsStringAsync();
+                TempData["Message"] = $"Register failed: {msg}";
+                TempData["MessageType"] = "danger";
+                return View(model);
+            }
+
+            TempData["Message"] = "Register successful! Please check your email to confirm your account.";
+            TempData["MessageType"] = "success";
+
+            return RedirectToAction("ResendConfirmEmail", "Authentication", new { email = model.Email });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                ViewBag.MessageType = "danger";
+                ViewBag.Message = "Invalid confirmation link.";
+                return View("ConfirmEmail");
+            }
+
+            var response = await _httpClient.GetAsync($"{_apiUrl}/Authentication/confirm-email?email={email}&token={token}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var msg = await response.Content.ReadAsStringAsync();
+                ViewBag.MessageType = "danger";
+                ViewBag.Message = $"Confirm failed: {msg}";
+                return View("ConfirmEmail");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var apiResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var message = apiResponse?.GetValueOrDefault("message") ?? "Unknown error";
+
+            // Mapping message từ API sang kiểu hiển thị
+            if (message.Contains("success", StringComparison.OrdinalIgnoreCase))
+            {
+                ViewBag.MessageType = "success";
+                ViewBag.Message = "Your email has been confirmed successfully!";
+            }
+            else if (message.Contains("expired", StringComparison.OrdinalIgnoreCase))
+            {
+                ViewBag.MessageType = "warning";
+                ViewBag.Message = "Your confirmation link has expired. Please register again.";
+            }
+            else
+            {
+                ViewBag.MessageType = "danger";
+                ViewBag.Message = "Invalid or expired confirmation link.";
+            }
+
+            return View("ConfirmEmail");
+        }
+
+        public IActionResult ResendConfirmEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResendConfirmEmail(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["Message"] = "Please enter your email address.";
+                TempData["MessageType"] = "warning";
+                return View();
+            }
+
+            var response = await _httpClient.PostAsJsonAsync($"{_apiUrl}/Authentication/resend-confirm-email", email);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var msg = await response.Content.ReadAsStringAsync();
+                ViewBag.MessageType = "danger";
+                ViewBag.Message = $"Failed: {msg}";
+                return View();
+            }
+
+            ViewBag.MessageType = "success";
+            ViewBag.Message = "Confirmation email has been resent successfully.";
+            return View();
+        }
+
     }
 }

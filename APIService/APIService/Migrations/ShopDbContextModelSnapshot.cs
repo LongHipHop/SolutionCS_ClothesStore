@@ -31,7 +31,6 @@ namespace APIService.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -65,7 +64,6 @@ namespace APIService.Migrations
                         .HasColumnType("nvarchar(72)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -95,7 +93,8 @@ namespace APIService.Migrations
                         .IsUnique();
 
                     b.HasIndex("Phone")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Phone] IS NOT NULL");
 
                     b.HasIndex("RoleId");
 
@@ -107,7 +106,7 @@ namespace APIService.Migrations
                             Id = 1,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 10, 28),
+                            CreateAt = new DateOnly(2025, 10, 29),
                             Email = "truongtranlong23@gmail.com",
                             Fullname = "Truong Tran Long",
                             Gender = "Male",
@@ -116,14 +115,14 @@ namespace APIService.Migrations
                             RoleId = 1,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 10, 28)
+                            UpdateAt = new DateOnly(2025, 10, 29)
                         },
                         new
                         {
                             Id = 2,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 10, 28),
+                            CreateAt = new DateOnly(2025, 10, 29),
                             Email = "longttce171365@fpt.edu.vn",
                             Fullname = "Tran Thi B",
                             Gender = "Male",
@@ -132,14 +131,14 @@ namespace APIService.Migrations
                             RoleId = 4,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 10, 28)
+                            UpdateAt = new DateOnly(2025, 10, 29)
                         },
                         new
                         {
                             Id = 3,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 10, 28),
+                            CreateAt = new DateOnly(2025, 10, 29),
                             Email = "customer@shop.com",
                             Fullname = "Phạm Văn C",
                             Gender = "Male",
@@ -148,7 +147,7 @@ namespace APIService.Migrations
                             RoleId = 5,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 10, 28)
+                            UpdateAt = new DateOnly(2025, 10, 29)
                         });
                 });
 
@@ -219,7 +218,7 @@ namespace APIService.Migrations
                         {
                             Id = 1,
                             AccountId = 3,
-                            CreatedAt = new DateTime(2025, 10, 28, 23, 6, 25, 315, DateTimeKind.Local).AddTicks(6699)
+                            CreatedAt = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5831)
                         });
                 });
 
@@ -301,6 +300,35 @@ namespace APIService.Migrations
                             Id = 4,
                             ColorName = "Blue"
                         });
+                });
+
+            modelBuilder.Entity("APIService.Models.EmailVerification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailVerification");
                 });
 
             modelBuilder.Entity("APIService.Models.OrderDetails", b =>
@@ -390,7 +418,7 @@ namespace APIService.Migrations
                             Id = 1,
                             AccountId = 3,
                             Note = "First order",
-                            OrderDate = new DateTime(2025, 10, 28, 23, 6, 25, 315, DateTimeKind.Local).AddTicks(6839),
+                            OrderDate = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5914),
                             PaymentMethod = "COD",
                             ShippingAddress = "123 Main St",
                             Status = "Pending",
@@ -466,7 +494,7 @@ namespace APIService.Migrations
                             Id = 1,
                             Amount = 500000m,
                             OrderId = 1,
-                            PaymentDate = new DateTime(2025, 10, 28, 23, 6, 25, 315, DateTimeKind.Local).AddTicks(6747),
+                            PaymentDate = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5852),
                             PaymentMethod = "COD",
                             PaymentStatus = "Pending"
                         },
@@ -475,7 +503,7 @@ namespace APIService.Migrations
                             Id = 2,
                             Amount = 500000m,
                             OrderId = 1,
-                            PaymentDate = new DateTime(2025, 10, 28, 23, 6, 25, 315, DateTimeKind.Local).AddTicks(6750),
+                            PaymentDate = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5854),
                             PaymentMethod = "Bank Transfer",
                             PaymentStatus = "Completed"
                         });

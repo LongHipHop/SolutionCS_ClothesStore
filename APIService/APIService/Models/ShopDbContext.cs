@@ -29,6 +29,7 @@ namespace APIService.Models
         public DbSet<Shipments> Shipments { get; set; }
         public DbSet<Sizes> Sizes { get; set; }
         public DbSet<PasswordResets> PasswordResets { get; set; }
+        public DbSet<EmailVerification> EmailVerification { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
