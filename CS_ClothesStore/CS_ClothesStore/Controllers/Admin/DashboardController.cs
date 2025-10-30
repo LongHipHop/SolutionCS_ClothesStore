@@ -69,6 +69,26 @@ namespace CS_ClothesStore.Controllers.Admin
                     ViewBag.NewAccounts = countUsersByWeekResult.Result.NewAccounts;
                 }
 
+
+                var revenueSummaryResponse = await _httpClient.GetAsync($"{_apiUrl}/Payment/earnings/summary");
+                revenueSummaryResponse.EnsureSuccessStatusCode();
+                var revenueSummaryJson = await revenueSummaryResponse.Content.ReadAsStringAsync();
+                var revenueSummary = JsonSerializer.Deserialize<dynamic>(revenueSummaryJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                ViewBag.DailyRevenue = revenueSummary?.GetProperty("daily").GetDecimal() ?? 0;
+                ViewBag.WeeklyRevenue = revenueSummary?.GetProperty("weekly").GetDecimal() ?? 0;
+                ViewBag.MonthlyRevenue = revenueSummary?.GetProperty("monthly").GetDecimal() ?? 0;
+                ViewBag.YearlyRevenue = revenueSummary?.GetProperty("yearly").GetDecimal() ?? 0;
+
+
+                var dailyRevenueResponse = await _httpClient.GetAsync($"{_apiUrl}/Payment/revenue/daily");
+                dailyRevenueResponse.EnsureSuccessStatusCode();
+                var dailyRevenueJson = await dailyRevenueResponse.Content.ReadAsStringAsync();
+                var dailyRevenue = JsonSerializer.Deserialize<dynamic>(dailyRevenueJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                ViewBag.TodayRevenue = dailyRevenue?.GetProperty("totalRevenue").GetDecimal() ?? 0;
+                ViewBag.TodayCount = dailyRevenue?.GetProperty("paymentCount").GetInt32() ?? 0;
+
                 return View("~/Views/Admin/Dashboard/Index.cshtml");
             }
             catch (HttpRequestException ex)
@@ -77,9 +97,20 @@ namespace CS_ClothesStore.Controllers.Admin
                 ViewBag.TotalAccounts = 0;
                 ViewBag.OldAccounts = 0;
                 ViewBag.NewAccounts = 0;
+                ViewBag.DailyRevenue = 0;
+                ViewBag.WeeklyRevenue = 0;
+                ViewBag.MonthlyRevenue = 0;
+                ViewBag.YearlyRevenue = 0;
+                ViewBag.TodayRevenue = 0;
+                ViewBag.TodayCount = 0;
 
                 return View("~/Views/Admin/Dashboard/Index.cshtml");
             }
+        }
+
+        public async Task<IActionResult> Earnings()
+        {
+            return View("~/Views/Admin/Dashboard/Earnings.cshtml");
         }
     }
 }
