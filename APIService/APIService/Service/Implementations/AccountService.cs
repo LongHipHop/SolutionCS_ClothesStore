@@ -199,6 +199,7 @@ namespace APIService.Service.Implementations
                     accountExist.UpdateAt = DateOnly.FromDateTime(DateTime.Now);
                     accountExist.Phone = accountDTO.Phone;
                     accountExist.BirthDay = accountDTO.BirthDay;
+                    accountExist.Gender = accountDTO.Gender;
                     accountExist.Image = accountDTO.Image;
 
                     if (accountExist.Password.Trim() != string.Empty)
@@ -268,6 +269,73 @@ namespace APIService.Service.Implementations
 
             return account;
 
+        }
+
+        public async Task<int> UpdatePassword(string oldPassword, string newPassword, int id)
+        {
+            try
+            {
+                var accountExit = await _repositoryManager.AccountRepostiory.GetAccountById(id);
+
+                if (accountExit == null)
+                {
+                    return 2;
+                }
+
+                if (!string.IsNullOrEmpty(oldPassword))
+                {
+                    bool valid = BCrypt.Net.BCrypt.Verify(oldPassword, accountExit.Password);
+                    if(!valid)
+                    {
+                        return 3;
+                    }
+                }
+
+                accountExit.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+                await _repositoryManager.AccountRepostiory.UpdateAsync(accountExit);
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
+        }
+
+        public async Task<int> CountAllUsersAsync()
+        {
+            try
+            {
+                var accounts = await _repositoryManager.AccountRepostiory.GetAll();
+
+                return accounts.Count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
+        }
+
+        public async Task<(int oldUsers, int newUsers)> CountUsersByWeekAsync()
+        {
+            try
+            {
+                var accounts = await _repositoryManager.AccountRepostiory.GetAll();
+                var now = DateTime.UtcNow;
+                var sevenDaysAgo = DateOnly.FromDateTime(now.AddDays(-7));
+
+                int newAccounts = accounts.Count(a => a.CreateAt >= sevenDaysAgo);
+                int oldAccounts = accounts.Count - newAccounts;
+
+                return (oldAccounts, newAccounts);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return (1, 1);
+            }
         }
     }
 }

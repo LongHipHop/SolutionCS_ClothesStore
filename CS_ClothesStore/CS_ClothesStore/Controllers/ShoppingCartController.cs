@@ -22,9 +22,12 @@ namespace CS_ClothesStore.Controllers
         public async Task<IActionResult> Index()
         {
             var viewModel = new ShoppingCartViewModel();
-            //For create login
-            //if(accountId.HasValue)
-            var cart = await GetCartByAccountIdAsync(3);
+
+            var userJson = HttpContext.Session.GetString("UserInfo");
+
+            var user = JsonSerializer.Deserialize<AccountDTO>(userJson);
+
+            var cart = await GetCartByAccountIdAsync(user.Id);
             viewModel.Cart = cart;
             return View(viewModel);
         }
