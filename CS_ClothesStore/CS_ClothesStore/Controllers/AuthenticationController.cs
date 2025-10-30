@@ -316,9 +316,19 @@ namespace CS_ClothesStore.Controllers
             var json = await response.Content.ReadAsStringAsync();
             var apiResponse = JsonSerializer.Deserialize<APIResponse<ApplicationUser>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            var user = apiResponse?.Result;
+            var user = apiResponse.Result;
 
-            HttpContext.Session.SetString("UserInfo", JsonSerializer.Serialize(user));
+            Console.WriteLine(user);
+
+            HttpContext.Session.SetString("JWTToken", user.Token);
+
+            var responseGetUser = await _httpClient.GetAsync($"{_apiUrl}/Account/GetAccountByEmail/{googleModel.Email}");
+            json = await responseGetUser.Content.ReadAsStringAsync();
+            var apiResponseGetUser = JsonSerializer.Deserialize<APIResponse<AccountDTO>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var itemUser = apiResponseGetUser.Result;
+
+            HttpContext.Session.SetString("UserInfo", JsonSerializer.Serialize(itemUser));
+            //HttpContext.Session.SetString("AccountID", itemUser.Id.ToString());
 
 
             TempData["Message"] = "Google login successfully!";

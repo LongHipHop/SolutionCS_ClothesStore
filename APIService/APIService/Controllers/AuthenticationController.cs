@@ -104,14 +104,47 @@ namespace APIService.Controllers
         [HttpPost("login-google")]
         public async Task<IActionResult> LoginByGoogle([FromBody] GoogleAccountDTO model)
         {
-            var result = await _authenticationService.LoginByGoogle(model);
-
-            return result.Item2 switch
+            if (model == null)
             {
-                0 => Ok(result.Item1),
-                2 => BadRequest("Tài khoản của bạn đã bị khóa."),
-                _ => BadRequest("Đăng nhập Google thất bại.")
-            };
+                var errorResponse = new APIResponse<object>
+                {
+                    Code = "1004",
+                    Result = null
+                };
+                return Ok(errorResponse);
+            }
+
+            var codeResult = await _authenticationService.LoginByGoogle(model);
+
+            string code = $"100{codeResult.Item2}";
+            if (codeResult.Item2 == 2)
+            {
+                Unauthorized("Account or password incorrectly!");
+                var response = new APIResponse<object>
+                {
+                    Code = code,
+                    Result = null
+                };
+                return Ok(response);
+            }
+            else if (codeResult.Item2 == 3)
+            {
+                var response = new APIResponse<object>
+                {
+                    Code = code,
+                    Result = null
+                };
+                return Ok(response);
+            }
+            else
+            {
+                var response = new APIResponse<ApplicationUser>
+                {
+                    Code = code,
+                    Result = codeResult.Item1
+                };
+                return Ok(response);
+            }
         }
 
         [HttpPost("Register")]
