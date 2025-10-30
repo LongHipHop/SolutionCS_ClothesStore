@@ -85,6 +85,31 @@ namespace APIService.Controllers
             return Ok(response);
         }
 
+        [HttpPut("EditPassword")]
+        public async Task<IActionResult> EditPassword([FromBody] ChangePasswordDTO model)
+        {
+            if(model == null || model.Id <= 0 || string.IsNullOrEmpty(model.NewPassword))
+            {
+                return BadRequest(new APIResponse<object>
+                {
+                    Code = "1003",
+                    Result = "Invalid data"
+                });
+            }
+
+            var codeResult = await _accountService.UpdatePassword(model.OldPassword, model.NewPassword, model.Id);
+
+            string code = $"100{codeResult}";
+
+            return codeResult switch
+            {
+                0 => Ok(new APIResponse<object> { Code = code, Result = "Password updated successfully" }),
+                2 => NotFound(new APIResponse<object> { Code = code, Result = "Account not found" }),
+                3 => BadRequest(new APIResponse<object> { Code = code, Result = "Old password incorrect" }),
+                _ => StatusCode(500, new APIResponse<object> { Code = code, Result = "Server error" })
+            };
+        }
+
         [HttpDelete("DeleteAccount/{id}")]
         public async Task<IActionResult> DeleteAccount(int id)
         {
@@ -108,5 +133,37 @@ namespace APIService.Controllers
             };
             return Ok(response);
         }
+
+        [HttpGet("CountAllAccounts")]
+        public async Task<IActionResult> CountAllAccounts()
+        {
+            var count = await _accountService.CountAllUsersAsync();
+
+            string code = $"1000";
+
+            var response = new APIResponse<object>
+            {
+                Code = code,
+                Result = count
+            }; 
+            return Ok(response);
+        }
+
+        [HttpGet("CountAccountsByWeek")]
+        public async Task<IActionResult> CountAccountsByWeek()
+        {
+            var (oldAccounts, newAccounts) = await _accountService.CountUsersByWeekAsync();
+
+            string code = $"1000";
+
+            var response = new APIResponse<object>
+            {
+                Code = code,
+                Result = new { oldAccounts, newAccounts }
+            };
+
+            return Ok(response);
+        }
+        
     }
 }

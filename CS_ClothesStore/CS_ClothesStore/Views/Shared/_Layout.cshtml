@@ -1,6 +1,12 @@
 ﻿@{
 	var jwt = Context.Session.GetString("JWTToken");
 	bool isLoggedIn = !string.IsNullOrEmpty(jwt);
+
+	var userJson = Context.Session.GetString("UserInfo");
+	var user = string.IsNullOrEmpty(userJson)
+		? null
+		: System.Text.Json.JsonSerializer.Deserialize<CS_ClothesStore.Models.DTOs.AccountDTO>(userJson);
+	var avatar = user?.Image ?? "Default.jpg";
 }
 
 <!DOCTYPE html>
@@ -131,7 +137,9 @@
 						</a>
 
 						<a href="/Profile/Index" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11" title="Profile">
-							<i class="zmdi zmdi-account"></i>
+							<img src="@Url.Content($"~/images/avatars/{avatar}")"
+								 alt="Avatar"
+								 style="height: 32px; width: 32px; border-radius: 50%; object-fit: cover;" />
 						</a>
 
 						<ul class="main-menu">

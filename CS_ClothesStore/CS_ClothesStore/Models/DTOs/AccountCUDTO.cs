@@ -1,4 +1,6 @@
-﻿namespace CS_ClothesStore.Models.DTOs
+﻿using System.Text.Json.Serialization;
+
+namespace CS_ClothesStore.Models.DTOs
 {
     public class AccountCUDTO
     {
@@ -22,5 +24,8 @@
         public DateTime? RefreshTokenExpiryTime { get; set; }
         public int TokenVersion { get; set; }
         public string? Image { get; set; }
+
+        [JsonIgnore]
+        public IFormFile? ImgFile { get; set; }
     }
 }

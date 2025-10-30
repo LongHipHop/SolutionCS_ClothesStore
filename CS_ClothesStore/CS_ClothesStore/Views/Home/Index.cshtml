@@ -5,6 +5,7 @@
 
 	var userJson = Context.Session.GetString("UserInfo");
 	var user = string.IsNullOrEmpty(userJson) ? null : System.Text.Json.JsonSerializer.Deserialize<CS_ClothesStore.Models.DTOs.AccountDTO>(userJson);
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -571,6 +572,7 @@
 					<!-- Info -->
 					<div class="col-md-6 col-lg-5 p-b-30">
 						<div class="p-r-50 p-t-5 p-lr-0-lg">
+
 							<h4 id="modalName" class="mtext-105 cl2 js-name-detail p-b-14"></h4>
 
 							<p><b>Price:</b> <span id="modalPrice"></span></p>
@@ -681,6 +683,10 @@
 		<script>
 			let selectedProductId = 0;
 
+			var user = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(user ?? new()));
+
+			var userId = user?.Id;
+
 			// Hiển thị modal khi click
 			$(".js-show-modal1").on("click", function () {
 				selectedProductId = $(this).data("id");
@@ -699,7 +705,7 @@
 
 			// Xử lý Add To Cart
 			$("#btnAddToCart").on("click", async function () {
-				const accountId = 3; // Giả định user login id = 3
+				const accountId = userId;
 				const productId = selectedProductId;
 				const colorId = $("#modalColor").val();
 				const sizeId = $("#modalSize").val();
