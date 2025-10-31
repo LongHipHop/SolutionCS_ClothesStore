@@ -1,0 +1,206 @@
+﻿@using CS_ClothesStore.Models.DTOs
+@model ProductCUDTO
+@{
+    ViewData["Title"] = "Create Product";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Corona Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+
+    <style>
+        .upload-container {
+            position: relative;
+            width: 180px;
+            height: 100%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px dashed #6c757d;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+            .upload-container:hover {
+                border-color: #000;
+                background-color: rgba(0,0,0,0.05);
+            }
+
+            .upload-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .upload-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .upload-container:hover .upload-overlay {
+            opacity: 1;
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <!-- partial -->
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h3 class="page-title"> Form elements </h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Forms</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Form elements</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Edit Account</h4>
+                            <p class="card-description">Update account information</p>
+
+                            <form asp-action="Create" method="post" enctype="multipart/form-data" class="forms-sample">
+
+                                <div class="form-group">
+                                    <label>Product Name</label>
+                                    <input asp-for="ProductName" class="form-control" placeholder="Enter product name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea asp-for="Description" class="form-control" placeholder="Enter description" rows="3"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Category ID</label>
+                                    <input asp-for="CategoryId" type="number" class="form-control" placeholder="Enter category id" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="Enter price" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Discount (%)</label>
+                                    <input asp-for="Discount" type="number" step="0.01" class="form-control" placeholder="Enter discount">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Stock Quantity</label>
+                                    <input asp-for="StockQuantity" type="number" class="form-control" placeholder="Enter stock quantity" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label fw-bold">Product Image</label>
+                                    <input asp-for="ImgFile"
+                                           class="form-control"
+                                           type="file"
+                                           accept="image/*"
+                                           onchange="previewImage(this)" />
+
+                                    <div class="mt-2 text-center">
+                                        <img id="previewImage"
+                                             src="@(Model?.Image != null ? Url.Content(Model.Image) : Url.Content("~/images/Default.png"))"
+                                             alt="Preview"
+                                             style="max-height: 200px; border: 1px solid #ddd; border-radius: 6px;" />
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary mr-2">Create</button>
+                                <a href="@Url.Action("Index", "Product")" class="btn btn-dark">Cancel</a>
+                            </form>
+
+                            <script>
+                                function previewImage(input) {
+                                    const preview = document.getElementById('previewImage');
+                                    const file = input.files[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = (e) => preview.src = e.target.result;
+                                        reader.readAsDataURL(file);
+                                    }
+                                }
+                            </script>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
+            </div>
+        </footer>
+        <!-- partial -->
+    </div>
+    <!-- main-panel ends -->
+
+    <script>
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/hoverable-collapse.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+</body>
+</html>

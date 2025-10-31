@@ -1,4 +1,6 @@
-﻿namespace CS_ClothesStore.Models.DTOs
+﻿using System.Text.Json.Serialization;
+
+namespace CS_ClothesStore.Models.DTOs
 {
     public class ProductCUDTO
     {
@@ -8,9 +10,12 @@
         public int CategoryId { get; set; }
         public double Price { get; set; }
         public double Discount { get; set; }
-        public string Image { get; set; }
+        [JsonIgnore]
+        public IFormFile? ImgFile { get; set; }
+        public string? Image { get; set; }
         public int StockQuantity { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        
     }
 }

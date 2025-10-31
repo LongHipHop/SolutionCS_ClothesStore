@@ -20,6 +20,7 @@ namespace APIService.Models.AutoMapper
             CreateMap<Products, ProductDTO>();
             CreateMap<ProductDTO, ProductCUDTO>();
             CreateMap<ProductCUDTO, Products>();
+            CreateMap<Products, ProductCUDTO>();
 
             CreateMap<Categories, CategoryDTO>();
 

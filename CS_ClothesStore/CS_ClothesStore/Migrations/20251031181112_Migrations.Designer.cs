@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CS_ClothesStore.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20251029100118_Migrations")]
+    [Migration("20251031181112_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -423,7 +423,6 @@ namespace CS_ClothesStore.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 

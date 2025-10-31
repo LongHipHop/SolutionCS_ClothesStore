@@ -35,9 +35,8 @@ namespace APIService.Service.Implementations
         public async Task<int> CreateProduct(ProductCUDTO productDTO)
         {
             if (productDTO == null)
-            {
                 return 1;
-            }
+
             try
             {
                 var product = _mapper.Map<Products>(productDTO);
@@ -48,7 +47,6 @@ namespace APIService.Service.Implementations
             }
             catch (AutoMapperMappingException)
             {
-
                 return 3;
             }
             catch (Exception ex)
@@ -57,6 +55,7 @@ namespace APIService.Service.Implementations
                 return 2;
             }
         }
+
 
         public async Task<int> DeleteProduct(int id)
         {

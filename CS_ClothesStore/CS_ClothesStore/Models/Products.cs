@@ -17,8 +17,8 @@ namespace CS_ClothesStore.Models
         [Column(TypeName ="decimal(10,2)")]
         public double Price { get; set; }
         public double Discount { get; set; }
-        [Required, StringLength(200)]
-        public string Image {  get; set; }
+        [StringLength(200)]
+        public string? Image {  get; set; }
         public int StockQuantity { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
