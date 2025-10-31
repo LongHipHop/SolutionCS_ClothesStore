@@ -1,7 +1,14 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    var jwt = Context.Session.GetString("JWTToken");
+    bool isLoggedIn = !string.IsNullOrEmpty(jwt);
+
+    var userJson = Context.Session.GetString("UserInfo");
+    var user = string.IsNullOrEmpty(userJson)
+        ? null
+        : System.Text.Json.JsonSerializer.Deserialize<CS_ClothesStore.Models.DTOs.AccountDTO>(userJson);
+    var avatar = user?.Image ?? "Default.jpg";
+    var userName = user?.Fullname;
+    var userRole = user?.RoleName;
 }
 
 
@@ -43,12 +50,14 @@
                     <div class="profile-desc">
                         <div class="profile-pic">
                             <div class="count-indicator">
-                                <img class="img-xs rounded-circle " src="~/assets/images/faces/face15.jpg" alt="">
+                                <img src="@Url.Content($"~/images/avatars/{avatar}")"
+                                     alt="Avatar"
+                                     style="height: 35px; width: 35px; border-radius: 50%; object-fit: cover;" />
                                 <span class="count bg-success"></span>
                             </div>
                             <div class="profile-name">
-                                <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
-                                <span>Gold Member</span>
+                                <h5 class="mb-0 font-weight-normal">@userName</h5>
+                                <span>@userRole</span>
                             </div>
                         </div>
                         <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
@@ -115,6 +124,15 @@
                             <i class="mdi mdi-table-large"></i>
                         </span>
                         <span class="menu-title">Account Tables</span>
+                    </a>
+                </li>
+
+                <li class="nav-item menu-items">
+                    <a class="nav-link" href="/Admin/Product/Index">
+                        <span class="menu-icon">
+                            <i class="mdi mdi-table-large"></i>
+                        </span>
+                        <span class="menu-title">Product Tables</span>
                     </a>
                 </li>
 
@@ -358,8 +376,10 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
                                 <div class="navbar-profile">
-                                    <img class="img-xs rounded-circle" src="~/assets/images/faces/face15.jpg" alt="">
-                                    <p class="mb-0 d-none d-sm-block navbar-profile-name">Henry Klein</p>
+                                    <img src="@Url.Content($"~/images/avatars/{avatar}")"
+                                         alt="Avatar"
+                                         style="height: 35px; width: 35px; border-radius: 50%; object-fit: cover;" />
+                                    <p class="mb-0 d-none d-sm-block navbar-profile-name">@userName</p>
                                     <i class="mdi mdi-menu-down d-none d-sm-block"></i>
                                 </div>
                             </a>

@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Admin\Products\" />
     <Folder Include="wwwroot\images\avatars\" />
   </ItemGroup>
 

@@ -420,7 +420,6 @@ namespace CS_ClothesStore.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIService.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20251029100016_Migrations")]
+    [Migration("20251031181038_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -109,7 +109,7 @@ namespace APIService.Migrations
                             Id = 1,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 10, 29),
+                            CreateAt = new DateOnly(2025, 11, 1),
                             Email = "truongtranlong23@gmail.com",
                             Fullname = "Truong Tran Long",
                             Gender = "Male",
@@ -118,14 +118,14 @@ namespace APIService.Migrations
                             RoleId = 1,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 10, 29)
+                            UpdateAt = new DateOnly(2025, 11, 1)
                         },
                         new
                         {
                             Id = 2,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 10, 29),
+                            CreateAt = new DateOnly(2025, 11, 1),
                             Email = "longttce171365@fpt.edu.vn",
                             Fullname = "Tran Thi B",
                             Gender = "Male",
@@ -134,14 +134,14 @@ namespace APIService.Migrations
                             RoleId = 4,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 10, 29)
+                            UpdateAt = new DateOnly(2025, 11, 1)
                         },
                         new
                         {
                             Id = 3,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 10, 29),
+                            CreateAt = new DateOnly(2025, 11, 1),
                             Email = "customer@shop.com",
                             Fullname = "Phạm Văn C",
                             Gender = "Male",
@@ -150,7 +150,7 @@ namespace APIService.Migrations
                             RoleId = 5,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 10, 29)
+                            UpdateAt = new DateOnly(2025, 11, 1)
                         });
                 });
 
@@ -221,7 +221,7 @@ namespace APIService.Migrations
                         {
                             Id = 1,
                             AccountId = 3,
-                            CreatedAt = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5831)
+                            CreatedAt = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5514)
                         });
                 });
 
@@ -421,7 +421,7 @@ namespace APIService.Migrations
                             Id = 1,
                             AccountId = 3,
                             Note = "First order",
-                            OrderDate = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5914),
+                            OrderDate = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5593),
                             PaymentMethod = "COD",
                             ShippingAddress = "123 Main St",
                             Status = "Pending",
@@ -497,7 +497,7 @@ namespace APIService.Migrations
                             Id = 1,
                             Amount = 500000m,
                             OrderId = 1,
-                            PaymentDate = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5852),
+                            PaymentDate = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5534),
                             PaymentMethod = "COD",
                             PaymentStatus = "Pending"
                         },
@@ -506,7 +506,7 @@ namespace APIService.Migrations
                             Id = 2,
                             Amount = 500000m,
                             OrderId = 1,
-                            PaymentDate = new DateTime(2025, 10, 29, 17, 0, 16, 433, DateTimeKind.Local).AddTicks(5854),
+                            PaymentDate = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5535),
                             PaymentMethod = "Bank Transfer",
                             PaymentStatus = "Completed"
                         });
@@ -658,7 +658,6 @@ namespace APIService.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 

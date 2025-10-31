@@ -20,16 +20,16 @@ namespace CS_ClothesStore.Controllers.Admin
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string status = "")
         {
-            //ViewBag.Message = "";
-            //ViewBag.MessageType = "";
+            ViewBag.Message = "";
+            ViewBag.MessageType = "";
 
-            //var token = HttpContext.Session.GetString("JWTToken");
-            //var userJson = HttpContext.Session.GetString("UserInfo");
+            var token = HttpContext.Session.GetString("JWTToken");
+            var userJson = HttpContext.Session.GetString("UserInfo");
 
-            //if( string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userJson))
-            //{
-            //    return RedirectToAction("Login", "Authentication");
-            //}
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userJson))
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
 
             var response = await _httpClient.GetAsync($"{_apiUrl}/Account/GetAll");
 
