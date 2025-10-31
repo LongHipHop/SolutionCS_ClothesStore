@@ -9,5 +9,7 @@ namespace APIService.Service.Interface
         Task<int> CreateProduct(ProductCUDTO productDTO);
         Task<int> UpdateProduct(ProductCUDTO productDTO);
         Task<int> DeleteProduct(int id);
+
+        Task<int> CountAllProductAsync();
     }
 }

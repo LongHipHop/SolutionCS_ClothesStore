@@ -51,8 +51,40 @@ namespace CS_ClothesStore.Controllers.Admin
                     ViewBag.TotalAccounts = countAllAccountResult.Result;
                 }
 
-                //Call CountUsersByWeek
-                var countUsersByWeekResponse = await _httpClient.GetAsync($"{_apiUrl}/Account/CountAccountsByWeek");
+                var countAllProductResponse = await _httpClient.GetAsync($"{_apiUrl}/Product/CountAllProducts");
+                countAllProductResponse.EnsureSuccessStatusCode();
+                var countAllProductsJson = await countAllProductResponse.Content.ReadAsStringAsync();
+                var countAllProductResult = JsonSerializer.Deserialize<APIResponse<int>>(countAllProductsJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (countAllProductResult == null || countAllProductResult.Code != "1000")
+                {
+                    ViewBag.Message = "Can't get all products!";
+                    ViewBag.MessageType = "error";
+                    ViewBag.TotalProducts = 0;
+                }
+                else
+                {
+                    ViewBag.TotalProducts = countAllProductResult.Result;
+                }
+
+                var countAllUnprocessedPayment = await _httpClient.GetAsync($"{_apiUrl}/Payment/CountPaymentUnprocessed");
+                countAllUnprocessedPayment.EnsureSuccessStatusCode();
+                var countAllUnprocessedPaymentJson = await countAllUnprocessedPayment.Content.ReadAsStringAsync();
+                var countAllUnprocessedPaymentResult = JsonSerializer.Deserialize<APIResponse<int>>(countAllUnprocessedPaymentJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (countAllUnprocessedPaymentResult == null || countAllUnprocessedPaymentResult.Code != "1000")
+                {
+                    ViewBag.Message = "Can't get all unprocessed payment!";
+                    ViewBag.MessageType = "error";
+                    ViewBag.TotalUnprocessedPayment = 0;
+                }
+                else
+                {
+                    ViewBag.TotalUnprocessedPayment = countAllUnprocessedPaymentResult.Result;
+                }
+
+                    //Call CountUsersByWeek
+                    var countUsersByWeekResponse = await _httpClient.GetAsync($"{_apiUrl}/Account/CountAccountsByWeek");
                 countUsersByWeekResponse.EnsureSuccessStatusCode();
                 var countUsersByWeekJson = await countUsersByWeekResponse.Content.ReadAsStringAsync();
                 var countUsersByWeekResult = JsonSerializer.Deserialize<APIResponse<AccountsByWeekDTO>>(countUsersByWeekJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

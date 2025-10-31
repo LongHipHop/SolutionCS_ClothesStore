@@ -1,0 +1,153 @@
+﻿@model List<CS_ClothesStore.Models.DTOs.AccountDTO>
+@{
+    ViewData["Title"] = "Get All Account";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    int currentPage = ViewBag.CurrentPage;
+    int pageSize = ViewBag.PageSize;
+    int totalItems = ViewBag.TotalItems;
+    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Corona Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+</head>
+<body>
+
+    <!-- partial -->
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h3 class="page-title"> Account Tables </h3>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Accounts</h4>
+
+                            <div class="table-responsive">
+                                @if (TempData["Message"] != null)
+                                {
+                                    var type = TempData["MessageType"]?.ToString() ?? "info";
+                                    <div class="alert alert-@type alert-dismissible fade show" role="alert">
+                                        @TempData["Message"]
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                }
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th> User </th>
+                                            <th> Full name </th>
+                                            <th> Phone </th>
+                                            <th> Birth Day </th>
+                                            <th> Status </th>
+                                            <th> Operation </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.Count; i++)
+                                        {
+                                            <tr>
+                                                <td class="py-1">
+                                                    <img style="width:30px;height:30px;border-radius: 50%; object-fit: cover;" src="~/images/avatars/@Model[i].Image" alt="image" />
+                                                </td>
+                                                <td> @Model[i].Fullname </td>
+                                                <td>
+                                                    @Model[i].Phone
+                                                </td>
+                                                <td> @Model[i].BirthDay </td>
+                                                <td> @Model[i].Status </td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            Select function
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="actionDropdown">
+                                                            <li>
+                                                                <a class="dropdown-item text-primary" href="@Url.Action("Details", "Account", new { id = Model[i].Id })">
+                                                                    Details
+                                                                </a>
+                                                            </li>
+                                                            <li><button class="dropdown-item text-danger" type="button">Block</button></li>
+                                                            <li>
+                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "Account", new { id = Model[i].Id })">
+                                                                    Edit
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <nav aria-label="Page navigation" class="mt-4">
+                                    <ul class="pagination justify-content-center">
+                                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                        {
+                                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                                <a class="page-link" href="@Url.Action("GetAllCustomer", new { page = i, pageSize = ViewBag.PageSize, status = ViewBag.StatusFilter })">@i</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin templates</a> from Bootstrapdash.com</span>
+            </div>
+        </footer>
+        <!-- partial -->
+    </div>
+    <!-- main-panel ends -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="../../assets/js/off-canvas.js"></script>
+    <script src="../../assets/js/hoverable-collapse.js"></script>
+    <script src="../../assets/js/misc.js"></script>
+    <script src="../../assets/js/settings.js"></script>
+    <script src="../../assets/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+</body>
+</html>

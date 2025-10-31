@@ -92,5 +92,21 @@ namespace APIService.Controllers
             var result = await _paymentService.GetRevenueByDateRangeAsync(startDate, endDate);
             return Ok(result);
         }
+
+        [HttpGet("CountPaymentUnprocessed")]
+        public async Task<IActionResult> CountPaymentUnprocessed()
+        {
+            var count = await _paymentService.CountPaymentUnProcessing();
+
+            string code = "1000";
+
+            var response = new APIResponse<object>
+            {
+                Code = code,
+                Result = count
+            };
+
+            return Ok(response);
+        }
     }
 }

@@ -108,5 +108,21 @@ namespace APIService.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("CountAllProducts")]
+        public async Task<IActionResult> CountAllProducts()
+        {
+            var count = await _productService.CountAllProductAsync();
+
+            string code = $"1000";
+
+            var response = new APIResponse<object>
+            {
+                Code = code,
+                Result = count
+            };
+
+            return Ok(response);
+        }
     }
 }

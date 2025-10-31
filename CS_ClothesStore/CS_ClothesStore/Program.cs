@@ -22,7 +22,7 @@ builder.Services.AddSingleton<HttpClient>(sp =>
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.IdleTimeout = TimeSpan.FromDays(7);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -112,13 +112,29 @@ app.Use(async (context, next) =>
     {
         var user = context.User;
 
-        string redirectPath = "Error/ErrorPage";
+        string redirectPath = "/Error/ErrorPage";
 
         if (user.Identity?.IsAuthenticated == true)
         {
             if (user.IsInRole("CUSTOMER"))
             {
-                redirectPath = "Error/ErrorPage";
+                redirectPath = "/Error/ErrorPage";
+            }
+            if (user.IsInRole("ADMIN"))
+            {
+                redirectPath = "/Error/ErrorPage";
+            }
+            if (user.IsInRole("MANAGER"))
+            {
+                redirectPath = "/Error/ErrorPage";
+            }
+            if (user.IsInRole("CONSULTING_STAFF"))
+            {
+                redirectPath = "/Error/ErrorPage";
+            }
+            if (user.IsInRole("SALE_STAFF"))
+            {
+                redirectPath = "/Error/ErrorPage";
             }
         }
 

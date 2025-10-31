@@ -16,6 +16,13 @@ namespace APIService.Repository.Implementations
             return Create(payment);
         }
 
+        public Task<List<Payments>> GetAllPaymentUnprocessing()
+        {
+            return _context.Payments
+                .Where(p => p.PaymentStatus == "Pending" || p.PaymentStatus == "Processing")
+                .ToListAsync();
+        }
+
         public async Task<decimal> GetDailyEarningsAsync(DateTime date)
         {
             var startOfDay = date.Date;

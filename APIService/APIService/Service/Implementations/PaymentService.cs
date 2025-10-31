@@ -136,5 +136,20 @@ namespace APIService.Service.Implementations
                 dailyRevenues = dailyList
             };
         }
+
+        public async Task<int> CountPaymentUnProcessing()
+        {
+            try
+            {
+                var payment = await _repositoryManager.PaymentRepository.GetAllPaymentUnprocessing();
+
+                return payment.Count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
+        }
     }
 }
