@@ -17,6 +17,21 @@ namespace APIService.Service.Implementations
             _mapper = mapper;
         }
 
+        public async Task<int> CountAllProductAsync()
+        {
+            try
+            {
+                var products = await _repositoryManager.ProductRepository.GetAll();
+
+                return products.Count;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return 1;
+            }
+        }
+
         public async Task<int> CreateProduct(ProductCUDTO productDTO)
         {
             if (productDTO == null)

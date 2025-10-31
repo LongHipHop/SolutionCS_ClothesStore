@@ -20,5 +20,7 @@ namespace APIService.Service.Interface
 
         Task<object> GetRevenueByDateRangeAsync(DateTime startDate, DateTime endDate);
 
+        Task<int> CountPaymentUnProcessing();
+
     }
 }

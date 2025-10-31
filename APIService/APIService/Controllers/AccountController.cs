@@ -17,7 +17,7 @@ namespace APIService.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var item = await _accountService.GetAll();

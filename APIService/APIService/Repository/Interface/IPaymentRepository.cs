@@ -6,6 +6,7 @@ namespace APIService.Repository.Interface
     {
         Task<IEnumerable<Payments>> GetPaymentsByOrderIdAsync(int orderId);
         Task CreatePayment(Payments payment);
+        Task<List<Payments>> GetAllPaymentUnprocessing();
 
         Task<decimal> GetDailyEarningsAsync(DateTime date);
         Task<decimal> GetWeeklyEarningsAsync(DateTime date);

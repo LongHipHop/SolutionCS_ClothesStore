@@ -193,7 +193,6 @@ namespace APIService.Service.Implementations
                 var accountExist = await _repositoryManager.AccountRepostiory.GetAccountById(accountDTO.Id);
                 if (accountExist != null)
                 {
-                    accountExist.Email = accountDTO.Email;
                     accountExist.Fullname = accountDTO.Fullname;
                     accountExist.Address = accountDTO.Address;
                     accountExist.UpdateAt = DateOnly.FromDateTime(DateTime.Now);
