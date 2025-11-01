@@ -33,7 +33,7 @@ namespace APIService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetCategory/{id}")]
+        [HttpGet("GetCategoryById/{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
             var codeResult = await _categoryService.GetCategoryById(id);

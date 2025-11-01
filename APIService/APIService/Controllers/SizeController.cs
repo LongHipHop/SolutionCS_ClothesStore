@@ -33,7 +33,7 @@ namespace APIService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetSize/{id}")]
+        [HttpGet("GetSizeById/{id}")]
         public async Task<IActionResult> GetSize(int id)
         {
             var codeResult = await _sizeService.GetSizeById(id);

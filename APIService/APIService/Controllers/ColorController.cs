@@ -33,7 +33,7 @@ namespace APIService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetColor/{id}")]
+        [HttpGet("GetColorById/{id}")]
         public async Task<IActionResult> GetColor(int id)
         {
             var codeResult = await _colorService.GetColorById(id);
