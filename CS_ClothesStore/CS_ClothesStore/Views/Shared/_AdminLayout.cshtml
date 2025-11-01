@@ -128,13 +128,32 @@
                 </li>
 
                 <li class="nav-item menu-items">
-                    <a class="nav-link" href="/Admin/Product/Index">
+                    <a class="nav-link" href="">
                         <span class="menu-icon">
                             <i class="mdi mdi-table-large"></i>
                         </span>
                         <span class="menu-title">Product Tables</span>
                     </a>
                 </li>
+
+                <li class="nav-item menu-items">
+                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <span class="menu-icon">
+                            <i class="mdi mdi-table-large"></i>
+                        </span>
+                        <span class="menu-title">Shop Management</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="ui-basic">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="/Admin/Product/Index">Product</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="/Admin/Color/Index">Color</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="/Admin/Category/Index">Category</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="/Admin/Size/Index">Size</a></li>
+                        </ul>
+                    </div>
+                </li>
+
 
                 @* <li class="nav-item menu-items"> *@
                 @*     <a class="nav-link" href="index.html"> *@
@@ -445,4 +464,5 @@
     <script src="~/assets/js/dashboard.js"></script>
     <!-- End custom js for this page -->
 </body>
+
 </html>

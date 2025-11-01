@@ -1,6 +1,6 @@
-﻿@model List<CS_ClothesStore.Models.DTOs.ProductDTO>
+﻿@model List<CS_ClothesStore.Models.DTOs.CategoryDTO>
 @{
-    ViewData["Title"] = "Get All Products";
+    ViewData["Title"] = "Get All Category";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 
     int currentPage = ViewBag.CurrentPage;
@@ -45,6 +45,7 @@
                         <div class="card-body">
                             <h4 class="card-title">Accounts</h4>
 
+
                             <div class="table-responsive">
                                 @if (TempData["Message"] != null)
                                 {
@@ -54,17 +55,17 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 }
+                                @{
+                                    int no = 1;
+                                }
 
-                                <a href="/Admin/Product/Create" class="btn btn-primary btn-fw">Create Product</a>
+                                <a href="/Admin/Category/Create" class="btn btn-primary btn-fw">Create Category</a>
 
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th> Product Name </th>
-                                            <th> Price </th>
-                                            <th> Discount </th>
-                                            <th> Image </th>
-                                            <th> Stock Quantity </th>
+                                            <th> No. </th>
+                                            <th> Category Name </th>
                                             <th> Operation </th>
                                         </tr>
                                     </thead>
@@ -72,36 +73,31 @@
                                         @for (int i = 0; i < Model.Count; i++)
                                         {
                                             <tr>
-                                                <td> @Model[i].ProductName </td>
-                                                <td>
-                                                    @String.Format("{0:N0}₫", @Model[i].Price)
-                                                </td>
-                                                <td> @String.Format("{0:N0}₫", @Model[i].Discount) </td>
-                                                <td>
-                                                    <img style="width: 135px !important; height: 100% !important; border-radius:0;" src="~/images/@Model[i].Image" alt="image" />
-                                                </td>
-                                                <td> @Model[i].StockQuantity </td>
+                                                <td> @no</td>
+                                                <td> @Model[i].CategoryName </td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                                             Select function
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="actionDropdown">
+                                                            @* <li> *@
+                                                            @*     <a class="dropdown-item text-primary" href="@Url.Action("Details", "Category", new { id = Model[i].Id })"> *@
+                                                            @*         Details *@
+                                                            @*     </a> *@
+                                                            @* </li> *@
                                                             <li>
-                                                                <a class="dropdown-item text-primary" href="@Url.Action("Details", "Product", new { id = Model[i].Id })">
-                                                                    Details
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "Product", new { id = Model[i].Id })">
+                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "Category", new { id = Model[i].Id })">
                                                                     Edit
                                                                 </a>
                                                             </li>
                                                             <li><button class="dropdown-item text-danger" type="button">Block</button></li>
+
                                                         </ul>
                                                     </div>
                                                 </td>
                                             </tr>
+                                            no++;
                                         }
                                     </tbody>
                                 </table>
