@@ -79,7 +79,13 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPasswordResetRepository, PasswordResetRepository>();
 builder.Services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+builder.Services.AddScoped<IColorRepository, ColorRepository>();
+builder.Services.AddScoped<IColorService, ColorService>();
+builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
+builder.Services.AddScoped<ISizeRepository, SizeRepostiory>();
+builder.Services.AddScoped<ISizeService, SizeService>();
 builder.Services.AddHostedService<EmailCleanupService>();
+
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

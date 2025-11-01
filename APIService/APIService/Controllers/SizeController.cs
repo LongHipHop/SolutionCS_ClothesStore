@@ -9,38 +9,38 @@ namespace APIService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class SizeController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ISizeService _sizeService;
 
-        public CategoryController(ICategoryService categoryService)
+        public SizeController(ISizeService sizeService)
         {
-            _categoryService = categoryService;
+            _sizeService = sizeService;
         }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var item = await _categoryService.GetAll();
-
+            var item = await _sizeService.GetAll();
             string code = $"100{item.Item2}";
 
-            var response = new APIResponse<IEnumerable<CategoryDTO>>
+            var response = new APIResponse<IEnumerable<SizeDTO>>
             {
                 Code = code,
-                Result = (IEnumerable<CategoryDTO>)item.Item1
+                Result = (IEnumerable<SizeDTO>)item.Item1
             };
+
             return Ok(response);
         }
 
-        [HttpGet("GetCategory/{id}")]
-        public async Task<IActionResult> GetCategory(int id)
+        [HttpGet("GetSize/{id}")]
+        public async Task<IActionResult> GetSize(int id)
         {
-            var codeResult = await _categoryService.GetCategoryById(id);
+            var codeResult = await _sizeService.GetSizeById(id);
 
             string code = $"100{codeResult.Item2}";
 
-            var response = new APIResponse<CategoryDTO>
+            var response = new APIResponse<SizeDTO>
             {
                 Code = code,
                 Result = codeResult.Item1
@@ -48,10 +48,10 @@ namespace APIService.Controllers
             return Ok(response);
         }
 
-        [HttpPut("UpdateCategory")]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryCUDTO Category)
+        [HttpPut("UpdateSize")]
+        public async Task<IActionResult> UpdateSize([FromBody] SizeCUDTO size)
         {
-            if (Category == null)
+            if (size == null)
             {
                 return Ok(new APIResponse<object>
                 {
@@ -60,23 +60,23 @@ namespace APIService.Controllers
                 });
             }
 
-            var codeResult = await _categoryService.UpdateCategory(Category);
+            var codeResult = await _sizeService.UpdateSize(size);
 
             string code = $"100{codeResult}";
 
-            var response = new APIResponse<CategoryCUDTO>
+            var response = new APIResponse<SizeCUDTO>
             {
                 Code = code,
-                Result = Category
+                Result = size
             };
 
             return Ok(response);
         }
 
-        [HttpPost("CreateCategory")]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryCUDTO Category)
+        [HttpPost("CreateSize")]
+        public async Task<IActionResult> CreateSize([FromBody] SizeCUDTO size)
         {
-            if (Category == null)
+            if (size == null)
             {
                 return Ok(new APIResponse<object>
                 {
@@ -84,21 +84,21 @@ namespace APIService.Controllers
                     Result = null
                 });
             }
-            var result = await _categoryService.CreateCategory(Category);
+            var result = await _sizeService.CreateSize(size);
             string code = $"100{result}";
 
-            var response = new APIResponse<CategoryCUDTO>
+            var response = new APIResponse<SizeCUDTO>
             {
                 Code = code,
-                Result = Category
+                Result = size
             };
             return Ok(response);
         }
 
-        [HttpDelete("DeleteCategory/{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        [HttpDelete("DeleteSize/{id}")]
+        public async Task<IActionResult> DeleteSize(int id)
         {
-            var codeResult = await _categoryService.DeleteCategory(id);
+            var codeResult = await _sizeService.DeleteSize(id);
 
             string code = $"100{codeResult}";
 
