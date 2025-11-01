@@ -12,5 +12,7 @@
         IOrderRepository OrderRepository { get; }
         IPasswordResetRepository PasswordResetRepository { get; }
         IEmailVerificationRepository EmailVerificationRepository { get; }
+        IColorRepository ColorRepository { get; }
+        ISizeRepository SizeRepository { get; }
     }
 }

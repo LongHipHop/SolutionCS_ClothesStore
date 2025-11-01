@@ -16,10 +16,15 @@ namespace APIService.Repository.Implementations
         private IOrderRepository _orderRepository;
         private IPasswordResetRepository _passwordResetRepository;
         private IEmailVerificationRepository _emailVerificationRepository;
+        private IColorRepository _colorRepository;
+        private ISizeRepository _sizeRepository;
 
         public RepositoryManager(ShopDbContext db)
         {
             _db = db;
+            _productRepository = new ProductRepository(db);
+            _colorRepository = new ColorRepository(db);
+            _sizeRepository = new SizeRepostiory(db);
         }
 
         public IAccountRepostiory AccountRepostiory
@@ -140,6 +145,30 @@ namespace APIService.Repository.Implementations
                     _emailVerificationRepository = new EmailVerificationRepository(_db);
                 }
                 return _emailVerificationRepository;
+            }
+        }
+
+        public IColorRepository ColorRepository
+        {
+            get
+            {
+                if(_colorRepository == null)
+                {
+                    _colorRepository = new ColorRepository(_db);
+                }
+                return _colorRepository;
+            }
+        }
+
+        public ISizeRepository SizeRepository
+        {
+            get
+            {
+                if(_sizeRepository == null)
+                {
+                    _sizeRepository = new SizeRepostiory(_db);
+                }
+                return _sizeRepository;
             }
         }
     }

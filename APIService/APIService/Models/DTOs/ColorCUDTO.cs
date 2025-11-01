@@ -1,0 +1,10 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace APIService.Models.DTOs
+{
+    public class ColorCUDTO
+    {
+        public int Id { get; set; }
+        public string ColorName { get; set; }
+    }
+}

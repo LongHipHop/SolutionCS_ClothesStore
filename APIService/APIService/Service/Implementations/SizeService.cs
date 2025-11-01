@@ -6,29 +6,30 @@ using AutoMapper;
 
 namespace APIService.Service.Implementations
 {
-    public class CategoryService : ICategoryService
+    public class SizeService : ISizeService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        public CategoryService(IRepositoryManager repositoryManager, IMapper mapper)
+        public SizeService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
-        public async Task<int> CreateCategory(CategoryCUDTO categoryCUDTO)
+        public async Task<int> CreateSize(SizeCUDTO sizeCUDTO)
         {
-            if (categoryCUDTO == null)
+            if (sizeCUDTO == null)
             {
                 return 2;
             }
 
             try
             {
-                var entity = _mapper.Map<Categories>(categoryCUDTO);
+                var entity = _mapper.Map<Sizes>(sizeCUDTO);
 
-                await _repositoryManager.CategoryRepository.CreateCategory(entity);
+
+                await _repositoryManager.SizeRepository.CreateSize(entity);
 
                 return 0;
             }
@@ -39,16 +40,16 @@ namespace APIService.Service.Implementations
             }
         }
 
-        public async Task<int> DeleteCategory(int id)
+        public async Task<int> DeleteSize(int id)
         {
             try
             {
-                var categoryExist = await _repositoryManager.CategoryRepository.GetCategorysById(id);
-                if (categoryExist == null)
+                var sizeExist = await _repositoryManager.SizeRepository.GetSizesById(id);
+                if (sizeExist == null)
                 {
                     return 2;
                 }
-                await _repositoryManager.CategoryRepository.DeleteCategoryAsync(categoryExist);
+                await _repositoryManager.SizeRepository.DeleteSizeAsync(sizeExist);
                 return 0;
             }
             catch (Exception ex)
@@ -58,17 +59,17 @@ namespace APIService.Service.Implementations
             }
         }
 
-        public async Task<(List<CategoryDTO>, int)> GetAll()
+        public async Task<(List<SizeDTO>, int)> GetAll()
         {
             try
             {
-                var categoryExist = await _repositoryManager.CategoryRepository.GetAll();
+                var sizeExist = await _repositoryManager.SizeRepository.GetAllSize();
 
-                if(categoryExist.Count != 0)
+                if (sizeExist.Count != 0)
                 {
-                    var categoryDto = _mapper.Map<List<CategoryDTO>>(categoryExist);
+                    var sizeDto = _mapper.Map<List<SizeDTO>>(sizeExist);
 
-                    return (categoryDto, 0);
+                    return (sizeDto, 0);
                 }
                 else
                 {
@@ -82,16 +83,16 @@ namespace APIService.Service.Implementations
             }
         }
 
-        public async Task<(CategoryDTO, int)> GetCategoryById(int id)
+        public async Task<(SizeDTO, int)> GetSizeById(int id)
         {
             try
             {
-                var categoryExist = await _repositoryManager.CategoryRepository.GetCategorysById(id);
+                var sizeExist = await _repositoryManager.SizeRepository.GetSizesById(id);
 
-                if (categoryExist != null)
+                if (sizeExist != null)
                 {
-                    var categoryDto = _mapper.Map<CategoryDTO>(categoryExist);
-                    return (categoryDto, 0);
+                    var sizeDto = _mapper.Map<SizeDTO>(sizeExist);
+                    return (sizeDto, 0);
                 }
                 else
                 {
@@ -105,22 +106,22 @@ namespace APIService.Service.Implementations
             }
         }
 
-        public async Task<int> UpdateCategory(CategoryCUDTO categoryCUDTO)
+        public async Task<int> UpdateSize(SizeCUDTO sizeCUDTO)
         {
-            if (categoryCUDTO == null)
+            if (sizeCUDTO == null)
                 return 2;
 
             try
             {
-                var category = await _repositoryManager.CategoryRepository
-                    .GetCategorysById(categoryCUDTO.Id);
+                var size = await _repositoryManager.SizeRepository
+                    .GetSizesById(sizeCUDTO.Id);
 
-                if (category == null)
+                if (size == null)
                     return 3;
 
-                _mapper.Map(categoryCUDTO, category);
+                _mapper.Map(sizeCUDTO, size);
 
-                await _repositoryManager.CategoryRepository.UpdateCategoryAsync(category);
+                await _repositoryManager.SizeRepository.UpdateSizeAsync(size);
 
                 return 0;
             }

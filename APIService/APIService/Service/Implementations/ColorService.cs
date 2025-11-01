@@ -6,29 +6,30 @@ using AutoMapper;
 
 namespace APIService.Service.Implementations
 {
-    public class CategoryService : ICategoryService
+    public class ColorService : IColorService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
 
-        public CategoryService(IRepositoryManager repositoryManager, IMapper mapper)
+        public ColorService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+
         }
 
-        public async Task<int> CreateCategory(CategoryCUDTO categoryCUDTO)
+        public async Task<int> CreateColor(ColorCUDTO colorCUDTO)
         {
-            if (categoryCUDTO == null)
+            if (colorCUDTO == null)
             {
                 return 2;
             }
 
             try
             {
-                var entity = _mapper.Map<Categories>(categoryCUDTO);
+                var entity = _mapper.Map<Colors>(colorCUDTO);
 
-                await _repositoryManager.CategoryRepository.CreateCategory(entity);
+                await _repositoryManager.ColorRepository.CreateColor(entity);
 
                 return 0;
             }
@@ -39,16 +40,16 @@ namespace APIService.Service.Implementations
             }
         }
 
-        public async Task<int> DeleteCategory(int id)
+        public async Task<int> DeleteColor(int id)
         {
             try
             {
-                var categoryExist = await _repositoryManager.CategoryRepository.GetCategorysById(id);
-                if (categoryExist == null)
+                var ColorExist = await _repositoryManager.ColorRepository.GetColorById(id);
+                if (ColorExist == null)
                 {
                     return 2;
                 }
-                await _repositoryManager.CategoryRepository.DeleteCategoryAsync(categoryExist);
+                await _repositoryManager.ColorRepository.DeleteColor(ColorExist);
                 return 0;
             }
             catch (Exception ex)
@@ -58,17 +59,17 @@ namespace APIService.Service.Implementations
             }
         }
 
-        public async Task<(List<CategoryDTO>, int)> GetAll()
+        public async Task<(List<ColorDTO>, int)> GetAll()
         {
             try
             {
-                var categoryExist = await _repositoryManager.CategoryRepository.GetAll();
+                var ColorExist = await _repositoryManager.ColorRepository.GetAll();
 
-                if(categoryExist.Count != 0)
+                if (ColorExist.Count != 0)
                 {
-                    var categoryDto = _mapper.Map<List<CategoryDTO>>(categoryExist);
+                    var ColorDto = _mapper.Map<List<ColorDTO>>(ColorExist);
 
-                    return (categoryDto, 0);
+                    return (ColorDto, 0);
                 }
                 else
                 {
@@ -82,16 +83,16 @@ namespace APIService.Service.Implementations
             }
         }
 
-        public async Task<(CategoryDTO, int)> GetCategoryById(int id)
+        public async Task<(ColorDTO, int)> GetColorById(int id)
         {
             try
             {
-                var categoryExist = await _repositoryManager.CategoryRepository.GetCategorysById(id);
+                var ColorExist = await _repositoryManager.ColorRepository.GetColorById(id);
 
-                if (categoryExist != null)
+                if (ColorExist != null)
                 {
-                    var categoryDto = _mapper.Map<CategoryDTO>(categoryExist);
-                    return (categoryDto, 0);
+                    var ColorDto = _mapper.Map<ColorDTO>(ColorExist);
+                    return (ColorDto, 0);
                 }
                 else
                 {
@@ -103,24 +104,25 @@ namespace APIService.Service.Implementations
                 Console.WriteLine(ex.Message);
                 return (new(), 1);
             }
+            throw new NotImplementedException();
         }
 
-        public async Task<int> UpdateCategory(CategoryCUDTO categoryCUDTO)
+        public async Task<int> UpdateColor(ColorCUDTO ColorCUDTO)
         {
-            if (categoryCUDTO == null)
+            if (ColorCUDTO == null)
                 return 2;
 
             try
             {
-                var category = await _repositoryManager.CategoryRepository
-                    .GetCategorysById(categoryCUDTO.Id);
+                var Color = await _repositoryManager.ColorRepository
+                    .GetColorById(ColorCUDTO.Id);
 
-                if (category == null)
+                if (Color == null)
                     return 3;
 
-                _mapper.Map(categoryCUDTO, category);
+                _mapper.Map(ColorCUDTO, Color);
 
-                await _repositoryManager.CategoryRepository.UpdateCategoryAsync(category);
+                await _repositoryManager.ColorRepository.UpdateColor(Color);
 
                 return 0;
             }

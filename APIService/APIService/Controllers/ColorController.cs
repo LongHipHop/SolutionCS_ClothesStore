@@ -9,38 +9,38 @@ namespace APIService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class ColorController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly IColorService _colorService;
 
-        public CategoryController(ICategoryService categoryService)
+        public ColorController(IColorService colorService)
         {
-            _categoryService = categoryService;
+            _colorService = colorService;
         }
 
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
-            var item = await _categoryService.GetAll();
-
+            var item = await _colorService.GetAll();
             string code = $"100{item.Item2}";
 
-            var response = new APIResponse<IEnumerable<CategoryDTO>>
+            var response = new APIResponse<IEnumerable<ColorDTO>>
             {
                 Code = code,
-                Result = (IEnumerable<CategoryDTO>)item.Item1
+                Result = (IEnumerable<ColorDTO>)item.Item1
             };
+
             return Ok(response);
         }
 
-        [HttpGet("GetCategory/{id}")]
-        public async Task<IActionResult> GetCategory(int id)
+        [HttpGet("GetColor/{id}")]
+        public async Task<IActionResult> GetColor(int id)
         {
-            var codeResult = await _categoryService.GetCategoryById(id);
+            var codeResult = await _colorService.GetColorById(id);
 
             string code = $"100{codeResult.Item2}";
 
-            var response = new APIResponse<CategoryDTO>
+            var response = new APIResponse<ColorDTO>
             {
                 Code = code,
                 Result = codeResult.Item1
@@ -48,10 +48,10 @@ namespace APIService.Controllers
             return Ok(response);
         }
 
-        [HttpPut("UpdateCategory")]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryCUDTO Category)
+        [HttpPut("UpdateColor")]
+        public async Task<IActionResult> UpdateColor([FromBody] ColorCUDTO color)
         {
-            if (Category == null)
+            if (color == null)
             {
                 return Ok(new APIResponse<object>
                 {
@@ -60,23 +60,23 @@ namespace APIService.Controllers
                 });
             }
 
-            var codeResult = await _categoryService.UpdateCategory(Category);
+            var codeResult = await _colorService.UpdateColor(color);
 
             string code = $"100{codeResult}";
 
-            var response = new APIResponse<CategoryCUDTO>
+            var response = new APIResponse<ColorCUDTO>
             {
                 Code = code,
-                Result = Category
+                Result = color
             };
 
             return Ok(response);
         }
 
-        [HttpPost("CreateCategory")]
-        public async Task<IActionResult> CreateCategory([FromBody] CategoryCUDTO Category)
+        [HttpPost("CreateColor")]
+        public async Task<IActionResult> CreateColor([FromBody] ColorCUDTO color)
         {
-            if (Category == null)
+            if (color == null)
             {
                 return Ok(new APIResponse<object>
                 {
@@ -84,21 +84,21 @@ namespace APIService.Controllers
                     Result = null
                 });
             }
-            var result = await _categoryService.CreateCategory(Category);
+            var result = await _colorService.CreateColor(color);
             string code = $"100{result}";
 
-            var response = new APIResponse<CategoryCUDTO>
+            var response = new APIResponse<ColorCUDTO>
             {
                 Code = code,
-                Result = Category
+                Result = color
             };
             return Ok(response);
         }
 
-        [HttpDelete("DeleteCategory/{id}")]
-        public async Task<IActionResult> DeleteCategory(int id)
+        [HttpDelete("DeleteColor/{id}")]
+        public async Task<IActionResult> DeleteColor(int id)
         {
-            var codeResult = await _categoryService.DeleteCategory(id);
+            var codeResult = await _colorService.DeleteColor(id);
 
             string code = $"100{codeResult}";
 
