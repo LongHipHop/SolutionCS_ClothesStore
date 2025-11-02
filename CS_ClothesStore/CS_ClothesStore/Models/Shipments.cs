@@ -9,14 +9,14 @@ namespace CS_ClothesStore.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int OrderId { get; set; }
+        public int ShippingProviderId { get; set; }
         public DateTime ShipDate { get; set; }
-        [StringLength(100)]
-        public string Carrier { get; set; }
         [StringLength(20)]
         public string TrackingNumber { get; set; }
         [StringLength(20)]
         public string Status { get; set; }
         public DateTime DeliveryDate { get; set; }
         public Orders Orders { get; set; }
+        public ShippingProviders ShippingProvider { get; set; }
     }
 }

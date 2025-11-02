@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIService.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20251031181038_Migrations")]
-    partial class Migrations
+    [Migration("20251102173107_Migration_new")]
+    partial class Migration_new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,7 +109,7 @@ namespace APIService.Migrations
                             Id = 1,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 11, 1),
+                            CreateAt = new DateOnly(2025, 11, 3),
                             Email = "truongtranlong23@gmail.com",
                             Fullname = "Truong Tran Long",
                             Gender = "Male",
@@ -118,14 +118,14 @@ namespace APIService.Migrations
                             RoleId = 1,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 11, 1)
+                            UpdateAt = new DateOnly(2025, 11, 3)
                         },
                         new
                         {
                             Id = 2,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 11, 1),
+                            CreateAt = new DateOnly(2025, 11, 3),
                             Email = "longttce171365@fpt.edu.vn",
                             Fullname = "Tran Thi B",
                             Gender = "Male",
@@ -134,14 +134,14 @@ namespace APIService.Migrations
                             RoleId = 4,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 11, 1)
+                            UpdateAt = new DateOnly(2025, 11, 3)
                         },
                         new
                         {
                             Id = 3,
                             Address = "Vinh Long",
                             BirthDay = new DateOnly(2025, 10, 1),
-                            CreateAt = new DateOnly(2025, 11, 1),
+                            CreateAt = new DateOnly(2025, 11, 3),
                             Email = "customer@shop.com",
                             Fullname = "Phạm Văn C",
                             Gender = "Male",
@@ -150,7 +150,7 @@ namespace APIService.Migrations
                             RoleId = 5,
                             Status = "Active",
                             TokenVersion = 0,
-                            UpdateAt = new DateOnly(2025, 11, 1)
+                            UpdateAt = new DateOnly(2025, 11, 3)
                         });
                 });
 
@@ -221,7 +221,7 @@ namespace APIService.Migrations
                         {
                             Id = 1,
                             AccountId = 3,
-                            CreatedAt = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5514)
+                            CreatedAt = new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6084)
                         });
                 });
 
@@ -421,7 +421,7 @@ namespace APIService.Migrations
                             Id = 1,
                             AccountId = 3,
                             Note = "First order",
-                            OrderDate = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5593),
+                            OrderDate = new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6178),
                             PaymentMethod = "COD",
                             ShippingAddress = "123 Main St",
                             Status = "Pending",
@@ -497,7 +497,7 @@ namespace APIService.Migrations
                             Id = 1,
                             Amount = 500000m,
                             OrderId = 1,
-                            PaymentDate = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5534),
+                            PaymentDate = new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6105),
                             PaymentMethod = "COD",
                             PaymentStatus = "Pending"
                         },
@@ -506,7 +506,7 @@ namespace APIService.Migrations
                             Id = 2,
                             Amount = 500000m,
                             OrderId = 1,
-                            PaymentDate = new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5535),
+                            PaymentDate = new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6108),
                             PaymentMethod = "Bank Transfer",
                             PaymentStatus = "Completed"
                         });
@@ -893,22 +893,17 @@ namespace APIService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Carrier")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("ShipDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ShippingProviderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -922,9 +917,58 @@ namespace APIService.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrdersId");
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ShippingProviderId");
 
                     b.ToTable("Shipments");
+                });
+
+            modelBuilder.Entity("APIService.Models.ShippingProviders", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DefaultFee")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShippingProviders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ContactNumber = "19001234",
+                            DefaultFee = 25000.00m,
+                            Description = "Fast and reliable delivery service for all regions.",
+                            Name = "Express"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ContactNumber = "19006092",
+                            DefaultFee = 30000.00m,
+                            Description = "Popular Vietnamese shipping provider offering nationwide delivery.",
+                            Name = "GHTK"
+                        });
                 });
 
             modelBuilder.Entity("APIService.Models.Sizes", b =>
@@ -1127,13 +1171,21 @@ namespace APIService.Migrations
 
             modelBuilder.Entity("APIService.Models.Shipments", b =>
                 {
-                    b.HasOne("APIService.Models.Orders", "Orders")
+                    b.HasOne("APIService.Models.Orders", "Order")
                         .WithMany("Shipments")
-                        .HasForeignKey("OrdersId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Orders");
+                    b.HasOne("APIService.Models.ShippingProviders", "ShippingProvider")
+                        .WithMany("Shipments")
+                        .HasForeignKey("ShippingProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("ShippingProvider");
                 });
 
             modelBuilder.Entity("APIService.Models.Accounts", b =>
@@ -1193,6 +1245,11 @@ namespace APIService.Migrations
             modelBuilder.Entity("APIService.Models.Roles", b =>
                 {
                     b.Navigation("Accounts");
+                });
+
+            modelBuilder.Entity("APIService.Models.ShippingProviders", b =>
+                {
+                    b.Navigation("Shipments");
                 });
 
             modelBuilder.Entity("APIService.Models.Sizes", b =>

@@ -108,5 +108,20 @@ namespace APIService.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var item = await _paymentService.GetAll();
+
+            string code = $"100{item.Item2}";
+
+            var response = new APIResponse<IEnumerable<PaymentDTO>>
+            {
+                Code = code,
+                Result = (IEnumerable<PaymentDTO>)item.Item1
+            };
+            return Ok(response);
+        }
     }
 }

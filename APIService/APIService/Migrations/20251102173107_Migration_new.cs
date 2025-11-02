@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace APIService.Migrations
 {
     /// <inheritdoc />
-    public partial class Migrations : Migration
+    public partial class Migration_new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -99,6 +99,22 @@ namespace APIService.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShippingProviders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    DefaultFee = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    ContactNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingProviders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -394,20 +410,25 @@ namespace APIService.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
+                    ShippingProviderId = table.Column<int>(type: "int", nullable: false),
                     ShipDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Carrier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TrackingNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrdersId = table.Column<int>(type: "int", nullable: false)
+                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shipments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipments_Orders_OrdersId",
-                        column: x => x.OrdersId,
+                        name: "FK_Shipments_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Shipments_ShippingProviders_ShippingProviderId",
+                        column: x => x.ShippingProviderId,
+                        principalTable: "ShippingProviders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -456,6 +477,15 @@ namespace APIService.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "ShippingProviders",
+                columns: new[] { "Id", "ContactNumber", "DefaultFee", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "19001234", 25000.00m, "Fast and reliable delivery service for all regions.", "Express" },
+                    { 2, "19006092", 30000.00m, "Popular Vietnamese shipping provider offering nationwide delivery.", "GHTK" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Sizes",
                 columns: new[] { "Id", "SizeName" },
                 values: new object[,]
@@ -471,9 +501,9 @@ namespace APIService.Migrations
                 columns: new[] { "Id", "Address", "BirthDay", "CreateAt", "Email", "Fullname", "Gender", "Image", "Password", "Phone", "RefreshToken", "RefreshTokenExpiryTime", "RoleId", "Status", "TokenVersion", "UpdateAt" },
                 values: new object[,]
                 {
-                    { 1, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 11, 1), "truongtranlong23@gmail.com", "Truong Tran Long", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984121", null, null, 1, "Active", 0, new DateOnly(2025, 11, 1) },
-                    { 2, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 11, 1), "longttce171365@fpt.edu.vn", "Tran Thi B", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984122", null, null, 4, "Active", 0, new DateOnly(2025, 11, 1) },
-                    { 3, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 11, 1), "customer@shop.com", "Phạm Văn C", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984123", null, null, 5, "Active", 0, new DateOnly(2025, 11, 1) }
+                    { 1, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 11, 3), "truongtranlong23@gmail.com", "Truong Tran Long", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984121", null, null, 1, "Active", 0, new DateOnly(2025, 11, 3) },
+                    { 2, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 11, 3), "longttce171365@fpt.edu.vn", "Tran Thi B", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984122", null, null, 4, "Active", 0, new DateOnly(2025, 11, 3) },
+                    { 3, "Vinh Long", new DateOnly(2025, 10, 1), new DateOnly(2025, 11, 3), "customer@shop.com", "Phạm Văn C", "Male", null, "$2a$12$cVw6vAlKHuxIFsz32ElSnOmMjjoeFpyIbRHZOfrim7nAgz0UbImI6", "0868984123", null, null, 5, "Active", 0, new DateOnly(2025, 11, 3) }
                 });
 
             migrationBuilder.InsertData(
@@ -491,12 +521,12 @@ namespace APIService.Migrations
             migrationBuilder.InsertData(
                 table: "Carts",
                 columns: new[] { "Id", "AccountId", "CreatedAt" },
-                values: new object[] { 1, 3, new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5514) });
+                values: new object[] { 1, 3, new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6084) });
 
             migrationBuilder.InsertData(
                 table: "Orders",
                 columns: new[] { "Id", "AccountId", "Note", "OrderDate", "PaymentMethod", "ShippingAddress", "Status", "TotalPrice" },
-                values: new object[] { 1, 3, "First order", new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5593), "COD", "123 Main St", "Pending", 500000m });
+                values: new object[] { 1, 3, "First order", new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6178), "COD", "123 Main St", "Pending", 500000m });
 
             migrationBuilder.InsertData(
                 table: "ProductPromotions",
@@ -541,8 +571,8 @@ namespace APIService.Migrations
                 columns: new[] { "Id", "Amount", "OrderId", "PaymentDate", "PaymentMethod", "PaymentStatus" },
                 values: new object[,]
                 {
-                    { 1, 500000m, 1, new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5534), "COD", "Pending" },
-                    { 2, 500000m, 1, new DateTime(2025, 11, 1, 1, 10, 37, 897, DateTimeKind.Local).AddTicks(5535), "Bank Transfer", "Completed" }
+                    { 1, 500000m, 1, new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6105), "COD", "Pending" },
+                    { 2, 500000m, 1, new DateTime(2025, 11, 3, 0, 31, 6, 530, DateTimeKind.Local).AddTicks(6108), "Bank Transfer", "Completed" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -634,9 +664,14 @@ namespace APIService.Migrations
                 column: "ProductsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shipments_OrdersId",
+                name: "IX_Shipments_OrderId",
                 table: "Shipments",
-                column: "OrdersId");
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_ShippingProviderId",
+                table: "Shipments",
+                column: "ShippingProviderId");
         }
 
         /// <inheritdoc />
@@ -677,6 +712,9 @@ namespace APIService.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "ShippingProviders");
 
             migrationBuilder.DropTable(
                 name: "Colors");

@@ -1,6 +1,6 @@
-﻿@model List<CS_ClothesStore.Models.DTOs.ProductDTO>
+﻿@model List<CS_ClothesStore.Models.DTOs.OrderDTO>
 @{
-    ViewData["Title"] = "Get All Products";
+    ViewData["Title"] = "Get All Orders";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 
     int currentPage = ViewBag.CurrentPage;
@@ -36,14 +36,14 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="page-header">
-                <h3 class="page-title"> Product Tables </h3>
+                <h3 class="page-title"> Order Tables </h3>
             </div>
             <div class="row">
 
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Products</h4>
+                            <h4 class="card-title">Orders</h4>
 
                             <div class="table-responsive">
                                 @if (TempData["Message"] != null)
@@ -55,17 +55,16 @@
                                     </div>
                                 }
 
-                                <a href="/Admin/Product/Create" class="btn btn-primary btn-fw">Create Product</a>
+                                @* <a href="/Admin/Product/Create" class="btn btn-primary btn-fw">Create Product</a> *@
 
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th> No. </th>
-                                            <th> Product Name </th>
-                                            <th> Price </th>
-                                            <th> Discount </th>
-                                            <th> Image </th>
-                                            <th> Stock Quantity </th>
+                                            <th> Order Date </th>
+                                            <th> Total Price </th>
+                                            <th> Status </th>
+                                            <th> Payment Method </th>
                                             <th> Operation </th>
                                         </tr>
                                     </thead>
@@ -79,15 +78,12 @@
 
                                             <tr id="productRow_@product.Id">
                                                 <td> @no</td>
-                                                <td> @Model[i].ProductName </td>
+                                                <td> @Model[i].OrderDate </td>
                                                 <td>
-                                                    @String.Format("{0:N0}₫", @Model[i].Price)
+                                                    @String.Format("{0:N0}₫", @Model[i].TotalPrice)
                                                 </td>
-                                                <td> @String.Format("{0:N0}₫", @Model[i].Discount) </td>
-                                                <td>
-                                                    <img style="width: 135px !important; height: 100% !important; border-radius:0;" src="~/images/@Model[i].Image" alt="image" />
-                                                </td>
-                                                <td> @Model[i].StockQuantity </td>
+                                                <td> @Model[i].Status </td>
+                                                <td> @Model[i].PaymentMethod </td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -95,16 +91,10 @@
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="actionDropdown">
                                                             <li>
-                                                                <a class="dropdown-item text-primary" href="@Url.Action("Details", "Product", new { id = Model[i].Id })">
+                                                                <a class="dropdown-item text-primary" href="@Url.Action("Details", "Order", new { id = Model[i].Id })">
                                                                     Details
                                                                 </a>
                                                             </li>
-                                                            <li>
-                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "Product", new { id = Model[i].Id })">
-                                                                    Edit
-                                                                </a>
-                                                            </li>
-                                                            <li><button class="dropdown-item text-danger btn-delete" data-id="@product.Id">Delete</button></li>
                                                         </ul>
                                                     </div>
                                                 </td>

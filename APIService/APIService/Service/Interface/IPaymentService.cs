@@ -8,6 +8,7 @@ namespace APIService.Service.Interface
         Task<(PaymentCUDTO, int)> CreatePaymentAsync(PaymentCUDTO payments);
         Task<(IEnumerable<PaymentCUDTO>, int)> GetPaymentByOrderIdAsync(int orderId);
 
+        Task<(List<PaymentDTO>, int)> GetAll();
         Task<object> GetDailyRevenueAndCountAsync();
 
         //Task<decimal> TotalMonthEarningAsync(int year, int month);

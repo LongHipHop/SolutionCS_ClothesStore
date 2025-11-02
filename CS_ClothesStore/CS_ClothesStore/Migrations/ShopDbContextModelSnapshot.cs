@@ -541,11 +541,6 @@ namespace CS_ClothesStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Carrier")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("datetime2");
 
@@ -557,6 +552,9 @@ namespace CS_ClothesStore.Migrations
 
                     b.Property<DateTime>("ShipDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ShippingProviderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -572,7 +570,42 @@ namespace CS_ClothesStore.Migrations
 
                     b.HasIndex("OrdersId");
 
+                    b.HasIndex("ShippingProviderId");
+
                     b.ToTable("Shipments");
+                });
+
+            modelBuilder.Entity("CS_ClothesStore.Models.ShippingProviders", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("DefaultFee")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Website")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShippingProviders");
                 });
 
             modelBuilder.Entity("CS_ClothesStore.Models.Sizes", b =>
@@ -759,7 +792,15 @@ namespace CS_ClothesStore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CS_ClothesStore.Models.ShippingProviders", "ShippingProvider")
+                        .WithMany("Shipments")
+                        .HasForeignKey("ShippingProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Orders");
+
+                    b.Navigation("ShippingProvider");
                 });
 
             modelBuilder.Entity("CS_ClothesStore.Models.Accounts", b =>
@@ -819,6 +860,11 @@ namespace CS_ClothesStore.Migrations
             modelBuilder.Entity("CS_ClothesStore.Models.Roles", b =>
                 {
                     b.Navigation("Accounts");
+                });
+
+            modelBuilder.Entity("CS_ClothesStore.Models.ShippingProviders", b =>
+                {
+                    b.Navigation("Shipments");
                 });
 
             modelBuilder.Entity("CS_ClothesStore.Models.Sizes", b =>

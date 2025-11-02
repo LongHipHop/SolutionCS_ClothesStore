@@ -14,5 +14,7 @@
         IEmailVerificationRepository EmailVerificationRepository { get; }
         IColorRepository ColorRepository { get; }
         ISizeRepository SizeRepository { get; }
+        IShippingProviderRepository ShippingProviderRepository { get; }
+        IShipmentRepository ShipmentRepository { get; }
     }
 }

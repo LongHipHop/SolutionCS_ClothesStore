@@ -18,6 +18,8 @@ namespace APIService.Repository.Implementations
         private IEmailVerificationRepository _emailVerificationRepository;
         private IColorRepository _colorRepository;
         private ISizeRepository _sizeRepository;
+        private IShippingProviderRepository _shippingProviderRepository;
+        private IShipmentRepository _shipmentRepository;
 
         public RepositoryManager(ShopDbContext db)
         {
@@ -26,6 +28,7 @@ namespace APIService.Repository.Implementations
             _colorRepository = new ColorRepository(db);
             _sizeRepository = new SizeRepostiory(db);
             _categoryRepository = new CategoryRepository(db);
+            _shippingProviderRepository = new ShippingProviderRepository(db);
         }
 
         public IAccountRepostiory AccountRepostiory
@@ -170,6 +173,30 @@ namespace APIService.Repository.Implementations
                     _sizeRepository = new SizeRepostiory(_db);
                 }
                 return _sizeRepository;
+            }
+        }
+
+        public IShippingProviderRepository ShippingProviderRepository
+        {
+            get
+            {
+                if(_shippingProviderRepository == null)
+                {
+                    _shippingProviderRepository = new ShippingProviderRepository(_db);
+                }
+                return _shippingProviderRepository;
+            }
+        }
+
+        public IShipmentRepository ShipmentRepository
+        {
+            get
+            {
+                if (_shipmentRepository == null)
+                {
+                    _shipmentRepository = new ShipmentRepository(_db);
+                }
+                return _shipmentRepository;
             }
         }
     }
