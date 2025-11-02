@@ -1,6 +1,7 @@
 ﻿using APIService.Models;
 using APIService.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace APIService.Repository.Implementations
 {
@@ -18,20 +19,20 @@ namespace APIService.Repository.Implementations
             return Delete(product);
         }
 
-        public async Task<List<Products>> GetAll()
+        public Task<List<Products>> GetAll()
         {
-            return await FindAll(trackChanges: false).ToListAsync();
+            return _context.Products
+                .Include(pv => pv.Category)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Products> GetProductById(int id)
         {
-            var item = await FindByCondition(a => a.Id == id, trackChanges: false, includeRole: false);
-            if(item == null)
-            {
-                return null;
-            }
-
-            return item;
+            return await _context.Products
+                .Include(pv => pv.Category)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(pv => pv.Id == id);
         }
 
         public Task UpdateProduct(Products product)

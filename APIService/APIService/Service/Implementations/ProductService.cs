@@ -3,6 +3,7 @@ using APIService.Models.DTOs;
 using APIService.Repository.Interface;
 using APIService.Service.Interface;
 using AutoMapper;
+using System.Drawing;
 
 namespace APIService.Service.Implementations
 {
@@ -39,7 +40,17 @@ namespace APIService.Service.Implementations
 
             try
             {
+                var category = await _repositoryManager.CategoryRepository
+                   .FindByCondition(c => c.CategoryName == productDTO.CategoryName, false, false);
+
+                if (category == null)
+                {
+                    Console.WriteLine("❌ Category does not exist in database!");
+                    return 3;
+                }
+
                 var product = _mapper.Map<Products>(productDTO);
+                product.CategoryId = category.Id;
                 product.CreatedAt = DateTime.Now;
                 product.UpdatedAt = DateTime.Now;
                 await _repositoryManager.ProductRepository.AddProduct(product);

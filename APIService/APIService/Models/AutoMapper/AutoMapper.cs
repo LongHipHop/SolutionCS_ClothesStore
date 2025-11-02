@@ -18,10 +18,13 @@ namespace APIService.Models.AutoMapper
             CreateMap<AccountDTO, AccountCUDTO>();
             CreateMap<AccountCUDTO, Accounts>();
 
-            CreateMap<Products, ProductDTO>();
-            CreateMap<ProductDTO, ProductCUDTO>();
-            CreateMap<ProductCUDTO, Products>();
-            CreateMap<Products, ProductCUDTO>();
+
+            CreateMap<Products, ProductDTO>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.CategoryName : null))
+                .ReverseMap();
+            CreateMap<Products, ProductCUDTO>()
+                     .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.CategoryName : null))
+                     .ReverseMap();
 
             CreateMap<ProductVariants, ProductVariantDTO>()
                 .ForMember(dest => dest.SizeName, opt => opt.MapFrom(src => src.Size != null ? src.Size.SizeName : null))

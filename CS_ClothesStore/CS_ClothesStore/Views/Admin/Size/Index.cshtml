@@ -55,10 +55,6 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>
                                 }
-                                @{
-                                    int no = 1;
-                                }
-
                                 <a href="/Admin/Size/Create" class="btn btn-primary btn-fw">Create Size</a>
 
                                 <table class="table table-striped">
@@ -70,29 +66,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @{
+                                            int no = 1;
+                                        }
+
                                         @for (int i = 0; i < Model.Count; i++)
                                         {
-                                            <tr>
-                                                <td> @no</td>
-                                                <td> @Model[i].SizeName </td>
+                                            var size = Model[i];
+                                            <tr id="sizeRow_@size.Id">
+                                                <td>@no</td>
+                                                <td>@size.SizeName</td>
                                                 <td>
                                                     <div class="dropdown">
-                                                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actionDropdown_@i" data-bs-toggle="dropdown" aria-expanded="false">
                                                             Select function
                                                         </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="actionDropdown">
-                                                            @* <li> *@
-                                                            @*     <a class="dropdown-item text-primary" href="@Url.Action("Details", "Size", new { id = Model[i].Id })"> *@
-                                                            @*         Details *@
-                                                            @*     </a> *@
-                                                            @* </li> *@
+                                                        <ul class="dropdown-menu" aria-labelledby="actionDropdown_@i">
                                                             <li>
-                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "Size", new { id = Model[i].Id })">
-                                                                    Edit
-                                                                </a>
+                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "Color", new { id = size.Id })">Edit</a>
                                                             </li>
-                                                            <li><button class="dropdown-item text-danger" type="button">Block</button></li>
-
+                                                            <li>
+                                                                <button class="dropdown-item text-danger btn-delete" data-id="@size.Id">Delete</button>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -148,5 +143,99 @@
     <!-- endinject -->
     <!-- Custom js for this page -->
     <!-- End custom js for this page -->
+
+    <div id="toast-container"></div>
+
+    <style>
+        /* Container cố định góc trên phải */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 33px;
+            text-align: center;
+        }
+
+        /* Toast cơ bản */
+        .toast {
+            min-width: 200px;
+            max-width: 300px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: #fff;
+            font-family: sans-serif;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            /* Màu sắc theo loại toast */
+            .toast.success {
+                background-color: #28a745;
+            }
+
+            .toast.danger {
+                background-color: #dc3545;
+            }
+
+            .toast.warning {
+                background-color: #ffc107;
+                color: #000;
+            }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            // Click Delete
+            $('.btn-delete').click(function () {
+                var id = $(this).data('id');
+                if (!confirm("Are you sure you want to delete this size?")) return;
+
+                $.ajax({
+                    url: '/Admin/Size/Delete/' + id,
+                    type: 'POST',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#sizeRow_' + id).remove();
+                            showToast(response.message, 'success');
+                        } else {
+                            showToast(response.message, 'danger');
+                        }
+                    },
+                    error: function () {
+                        showToast("System error.", 'danger');
+                    }
+                });
+            });
+
+            // Toast function
+                    function showToast(message, type = 'success', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+
+            // Cho hiệu ứng xuất hiện
+            setTimeout(() => toast.classList.add('show'), 50);
+
+            // Tự động ẩn
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => container.removeChild(toast), 300);
+            }, duration);
+        }
+        });
+    </script>
 </body>
 </html>

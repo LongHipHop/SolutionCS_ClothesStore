@@ -25,6 +25,7 @@ namespace APIService.Repository.Implementations
             _productRepository = new ProductRepository(db);
             _colorRepository = new ColorRepository(db);
             _sizeRepository = new SizeRepostiory(db);
+            _categoryRepository = new CategoryRepository(db);
         }
 
         public IAccountRepostiory AccountRepostiory
