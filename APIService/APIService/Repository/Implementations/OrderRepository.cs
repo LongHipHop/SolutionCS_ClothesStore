@@ -1,5 +1,6 @@
 ﻿using APIService.Models;
 using APIService.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIService.Repository.Implementations
 {
@@ -27,6 +28,11 @@ namespace APIService.Repository.Implementations
         public Task CreateOrder(Orders order)
         {
             return Create(order);
+        }
+
+        public Task<List<Orders>> GetAll()
+        {
+            return FindAll(false).ToListAsync();
         }
     }
 }

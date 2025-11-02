@@ -51,10 +51,13 @@ namespace APIService.Models.AutoMapper
             CreateMap<Categories, CategoryDTO>().ReverseMap();
             CreateMap<Categories, CategoryCUDTO>().ReverseMap();
 
-            CreateMap<Payments, PaymentCUDTO>();
+            CreateMap<Payments, PaymentCUDTO>().ReverseMap();
+            CreateMap<Payments, PaymentDTO>().ReverseMap();
 
             CreateMap<Orders, OrderDTO>();
             CreateMap<OrderDTO, Orders>();
+
+            CreateMap<Shipments, ShipmentCUDTO>().ReverseMap();
         }
     }
 }

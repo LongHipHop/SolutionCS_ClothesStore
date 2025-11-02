@@ -30,6 +30,7 @@ namespace APIService.Models
         public DbSet<Sizes> Sizes { get; set; }
         public DbSet<PasswordResets> PasswordResets { get; set; }
         public DbSet<EmailVerification> EmailVerification { get; set; }
+        public DbSet<ShippingProviders> ShippingProviders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -285,6 +286,25 @@ namespace APIService.Models
                 new Sizes { Id = 3, SizeName = "L" },
                 new Sizes { Id = 4, SizeName = "XL" }
             );
+
+                modelBuilder.Entity<ShippingProviders>().HasData(
+            new ShippingProviders
+            {
+                Id = 1,
+                Name = "Express",
+                Description = "Fast and reliable delivery service for all regions.",
+                DefaultFee = 25000.00m,
+                ContactNumber = "19001234"
+            },
+            new ShippingProviders
+            {
+                Id = 2,
+                Name = "GHTK",
+                Description = "Popular Vietnamese shipping provider offering nationwide delivery.",
+                DefaultFee = 30000.00m,
+                ContactNumber = "19006092"
+            }
+        );
         }
     }
 }

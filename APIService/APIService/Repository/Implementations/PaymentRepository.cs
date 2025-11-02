@@ -16,6 +16,11 @@ namespace APIService.Repository.Implementations
             return Create(payment);
         }
 
+        public Task<List<Payments>> GetAll()
+        {
+            return FindAll(false).ToListAsync();
+        }
+
         public Task<List<Payments>> GetAllPaymentUnprocessing()
         {
             return _context.Payments

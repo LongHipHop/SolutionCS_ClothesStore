@@ -3,16 +3,19 @@ using APIService.Models.DTOs;
 using APIService.Repository.Implementations;
 using APIService.Repository.Interface;
 using APIService.Service.Interface;
+using AutoMapper;
 
 namespace APIService.Service.Implementations
 {
     public class PaymentService : IPaymentService
     {
         private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
 
-        public PaymentService(IRepositoryManager repositoryManager)
+        public PaymentService(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
 
         public async Task<(PaymentCUDTO, int)> CreatePaymentAsync(PaymentCUDTO dto)
@@ -149,6 +152,29 @@ namespace APIService.Service.Implementations
             {
                 Console.WriteLine(ex.Message);
                 return 1;
+            }
+        }
+
+        public async Task<(List<PaymentDTO>, int)> GetAll()
+        {
+            try
+            {
+                var payment = await _repositoryManager.PaymentRepository.GetAll();
+
+                if(payment.Count != 0)
+                {
+                    var paymentDto = _mapper.Map<List<PaymentDTO>>(payment);
+                    return (paymentDto, 0);
+                }
+                else
+                {
+                    return (new(), 2);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+                return (new(), 1);
             }
         }
     }

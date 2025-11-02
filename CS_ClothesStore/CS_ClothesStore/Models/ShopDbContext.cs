@@ -30,6 +30,7 @@ namespace CS_ClothesStore.Models
         public DbSet<Sizes> Sizes { get; set; }
         public DbSet<PasswordResets> PasswordResets { get; set; }
         public DbSet<EmailVerification> EmailVerification { get; set; }
+        public DbSet<ShippingProviders> ShippingProviders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,4 @@
-﻿@model CS_ClothesStore.Models.DTOs.ProductDTO
+﻿@model CS_ClothesStore.Models.DTOs.OrderDTO
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -134,60 +134,40 @@
                 <div class="col-12 grid-margin">
                     <div class="card">
                         <div class="container py-4">
-                            <h3 class="table-title">Account Information</h3>
+                            <h3 class="table-title">Order Information</h3>
                             <table class="modern-table">
                                 <tbody>
                                     <tr>
-                                        <th>Product Name</th>
-                                        <td>@Model.ProductName</td>
+                                        <th>Account ID</th>
+                                        <td>@Model.AccountId</td>
                                     </tr>
                                     <tr>
-                                        <th>Description</th>
-                                        <td>@Model.Description</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Category</th>
-                                        <td>@Model.CategoryName</td>
+                                        <th>Order Date</th>
+                                        <td>@Model.OrderDate</td>
                                     </tr>
                                     <tr>
                                         <th>Price</th>
-                                        <td>@String.Format("{0:N0}₫", @Model.Price)</td>
+                                        <td>@String.Format("{0:N0}₫", @Model.TotalPrice)</td>
                                     </tr>
                                     <tr>
-                                        <th>Discount</th>
-                                        <td>@String.Format("{0:N0}₫", @Model.Discount)</td>
+                                        <th>Status</th>
+                                        <td>@Model.Status</td>
                                     </tr>
                                     <tr>
-                                        <th>Product Image</th>
-                                        <td>
-                                            @if (!string.IsNullOrEmpty(Model.Image))
-                                            {
-                                                <img style="width: 135px !important; height: 100% !important; border-radius:0;" src="~/images/@Model.Image" alt="User Image" class="product-img" />
-                                            }
-                                            else
-                                            {
-                                                <span>No image available</span>
-                                            }
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Stock Quantity</th>
-                                        <td>@Model.StockQuantity</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Created At</th>
-                                        <td>@(Model.CreatedAt.ToString("dd/MM/yyyy") ?? "-")</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Updated At</th>
-                                        <td>@(Model.UpdatedAt.ToString("dd/MM/yyyy") ?? "-")</td>
+                                        <th>Shipping Address</th>
+                                        <td>@Model.ShippingAddress</td>
                                     </tr>
                                     
+                                    <tr>
+                                        <th>Payment Method</th>
+                                        <td>@Model.PaymentMethod</td>
+                                    </tr>
+
                                 </tbody>
                             </table>
 
                             <div class="text-end mt-4">
-                                <a asp-action="Index" asp-controller="Product" class="btn btn-outline-secondary back-btn">
+                                <a asp-action="Index" asp-controller="Order" class="btn btn-outline-secondary back-btn">
                                     <i class="mdi mdi-arrow-left"></i> Back to List
                                 </a>
                             </div>

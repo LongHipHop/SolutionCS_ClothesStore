@@ -100,6 +100,23 @@ namespace CS_ClothesStore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ShippingProviders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    DefaultFee = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    ContactNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Website = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShippingProviders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sizes",
                 columns: table => new
                 {
@@ -392,8 +409,8 @@ namespace CS_ClothesStore.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
+                    ShippingProviderId = table.Column<int>(type: "int", nullable: false),
                     ShipDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Carrier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TrackingNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -406,6 +423,12 @@ namespace CS_ClothesStore.Migrations
                         name: "FK_Shipments_Orders_OrdersId",
                         column: x => x.OrdersId,
                         principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Shipments_ShippingProviders_ShippingProviderId",
+                        column: x => x.ShippingProviderId,
+                        principalTable: "ShippingProviders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -502,6 +525,11 @@ namespace CS_ClothesStore.Migrations
                 name: "IX_Shipments_OrdersId",
                 table: "Shipments",
                 column: "OrdersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_ShippingProviderId",
+                table: "Shipments",
+                column: "ShippingProviderId");
         }
 
         /// <inheritdoc />
@@ -542,6 +570,9 @@ namespace CS_ClothesStore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "ShippingProviders");
 
             migrationBuilder.DropTable(
                 name: "Colors");
