@@ -217,30 +217,37 @@ namespace CS_ClothesStore.Controllers.Admin
             }
         }
 
-        [HttpPost]
+        [HttpPost("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var token = HttpContext.Session.GetString("JWTToken");
-
             if (string.IsNullOrEmpty(token))
-            {
                 return Json(new { success = false, message = "Unauthorized" });
-            }
 
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             try
             {
                 var response = await _httpClient.DeleteAsync($"{_apiUrl}/Color/DeleteColor/{id}");
                 var json = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<APIResponse<int>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                return RedirectToAction("Index", "Color");
+                // Thay APIResponse<int> bằng object
+                var result = JsonSerializer.Deserialize<APIResponse<object>>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (result?.Code == "1000")
+                    return Json(new { success = true, message = "Deleted successfully!" });
+                else if (result?.Code == "1002")
+                    return Json(new { success = false, message = "Color not found." });
+                else
+                    return Json(new { success = false, message = "Delete failed." });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+
     }
 }

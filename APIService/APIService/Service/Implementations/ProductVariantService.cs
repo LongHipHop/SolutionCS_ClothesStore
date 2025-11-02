@@ -36,7 +36,7 @@ namespace APIService.Service.Implementations
 
                 if (product == null || color == null || size == null)
                 {
-                    Console.WriteLine("❌ Product/Color/Size không tồn tại trong database!");
+                    Console.WriteLine("❌ Product/Color/Size does not exist in database!");
                     return 3;
                 }
 

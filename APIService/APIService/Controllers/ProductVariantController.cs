@@ -34,8 +34,8 @@ namespace APIService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetProductVariant/{id}")]
-        public async Task<IActionResult> GetProductVariant(int id)
+        [HttpGet("GetProductVariantById/{id}")]
+        public async Task<IActionResult> GetProductVariantById(int id)
         {
             var codeResult = await productVariantService.GetProductVariantById(id);
 

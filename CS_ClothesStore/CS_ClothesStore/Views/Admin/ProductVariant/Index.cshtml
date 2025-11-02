@@ -1,6 +1,6 @@
-﻿@model List<CS_ClothesStore.Models.DTOs.ColorDTO>
+﻿@model List<CS_ClothesStore.Models.DTOs.ProductVariantDTO>
 @{
-    ViewData["Title"] = "Get All Color";
+    ViewData["Title"] = "Get All Product variants";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 
     int currentPage = ViewBag.CurrentPage;
@@ -36,15 +36,14 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="page-header">
-                <h3 class="page-title"> Account Tables </h3>
+                <h3 class="page-title"> Product Variant Tables </h3>
             </div>
             <div class="row">
 
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Accounts</h4>
-
+                            <h4 class="card-title">Product Variants</h4>
 
                             <div class="table-responsive">
                                 @if (TempData["Message"] != null)
@@ -56,13 +55,17 @@
                                     </div>
                                 }
 
-                                <a href="/Admin/Color/Create" class="btn btn-primary btn-fw">Create Color</a>
+                                <a href="/Admin/ProductVariant/Create" class="btn btn-primary btn-fw">Create Product Variant</a>
 
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
                                             <th> No. </th>
+                                            <th> Product Name </th>
                                             <th> Color Name </th>
+                                            <th> Size Name </th>
+                                            <th> Stock </th>
+                                            <th> Price </th>
                                             <th> Operation </th>
                                         </tr>
                                     </thead>
@@ -70,25 +73,31 @@
                                         @{
                                             int no = 1;
                                         }
-
                                         @for (int i = 0; i < Model.Count; i++)
                                         {
-                                            var color = Model[i];
-                                            <tr id="colorRow_@color.Id">
-                                                <td>@no</td>
-                                                <td>@color.ColorName</td>
+                                            var productVariant = Model[i];
+
+                                            <tr id="productVariantRow_@productVariant.Id">
+                                                <td> @no </td>
+                                                <td> @Model[i].ProductName </td>
+                                                <td> @Model[i].ColorName </td>
+                                                <td> @Model[i].SizeName </td>
+                                                <td> @Model[i].Stock </td>
+                                                <td>
+                                                    @String.Format("{0:N0}₫", @Model[i].Price)
+                                                </td>
                                                 <td>
                                                     <div class="dropdown">
-                                                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actionDropdown_@i" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="actionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                                             Select function
                                                         </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="actionDropdown_@i">
+                                                        <ul class="dropdown-menu" aria-labelledby="actionDropdown">
                                                             <li>
-                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "Color", new { id = color.Id })">Edit</a>
+                                                                <a class="dropdown-item text-warning" href="@Url.Action("Edit", "ProductVariant", new { id = Model[i].Id })">
+                                                                    Edit
+                                                                </a>
                                                             </li>
-                                                            <li>
-                                                                <button class="dropdown-item text-danger btn-delete" data-id="@color.Id">Delete</button>
-                                                            </li>
+                                                            <li><button class="dropdown-item text-danger btn-delete" data-id="@productVariant.Id">Delete</button></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -182,16 +191,16 @@
 
             /* Màu sắc theo loại toast */
             .toast.success {
-                background-color: #28a745;
+                background-Product: #28a745;
             }
 
             .toast.danger {
-                background-color: #dc3545;
+                background-Product: #dc3545;
             }
 
             .toast.warning {
-                background-color: #ffc107;
-                color: #000;
+                background-Product: #ffc107;
+                Product: #000;
             }
     </style>
 
@@ -200,14 +209,14 @@
             // Click Delete
             $('.btn-delete').click(function () {
                 var id = $(this).data('id');
-                if (!confirm("Are you sure you want to delete this color?")) return;
+                if (!confirm("Are you sure you want to delete this product variant?")) return;
 
                 $.ajax({
-                    url: '/Admin/Color/Delete/' + id,
+                    url: '/Admin/ProductVariant/Delete/' + id,
                     type: 'POST',
                     success: function (response) {
                         if (response.success) {
-                            $('#colorRow_' + id).remove();
+                            $('#productVariantRow_' + id).remove();
                             showToast(response.message, 'success');
                         } else {
                             showToast(response.message, 'danger');
@@ -238,6 +247,5 @@
         }
         });
     </script>
-
 </body>
 </html>

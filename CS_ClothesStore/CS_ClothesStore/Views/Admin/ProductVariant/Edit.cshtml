@@ -1,7 +1,7 @@
 ﻿@using CS_ClothesStore.Models.DTOs
-@model ProductCUDTO
+@model ProductVariantCUDTO
 @{
-    ViewData["Title"] = "Edit Product";
+    ViewData["Title"] = "Edit Product variant";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -89,10 +89,10 @@
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Edit Account</h4>
-                            <p class="card-description">Update account information</p>
+                            <h4 class="card-title">Edit Product Variant</h4>
+                            <p class="card-description">Update product variant information</p>
 
-                            <form action="/Admin/Product/Edit" method="post" enctype="multipart/form-data" class="forms-sample">
+                            <form action="/Admin/ProductVariant/Edit" method="post" enctype="multipart/form-data" class="forms-sample">
                                 <input type="hidden" name="Id" value="@Model.Id" />
 
                                 <div class="form-group">
@@ -102,33 +102,27 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exampleInputPhone">Descripton</label>
-                                    <input type="text" class="form-control" id="exampleInputPhone" name="Description"
-                                           placeholder="Enter description" value="@Model.Description">
+                                    <label for="exampleInputPhone">Color Name</label>
+                                    <input type="text" class="form-control" id="exampleInputPhone" name="ColorName"
+                                           placeholder="Enter color name" value="@Model.ColorName">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exampleInputPhone">Category</label>
-                                    <input type="text" class="form-control" id="exampleInputPhone" name="Category"
-                                           placeholder="Enter category" value="@Model.CategoryName">
+                                    <label for="exampleInputPhone">Size Name</label>
+                                    <input type="text" class="form-control" id="exampleInputPhone" name="SizeName"
+                                           placeholder="Enter size name" value="@Model.SizeName">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputPhone">Stock</label>
+                                    <input type="text" class="form-control" id="exampleInputPhone" name="Stock"
+                                           placeholder="Enter stock" value="@Model.Stock">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="exampleInputPhone">Price</label>
                                     <input type="text" class="form-control" id="exampleInputPhone" name="Price"
                                            placeholder="Enter price" value="@Model.Price">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInputPhone">Discount</label>
-                                    <input type="text" class="form-control" id="exampleInputPhone" name="Discount"
-                                           placeholder="Enter discount" value="@Model.Discount">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInputPhone">Stock quantity</label>
-                                    <input type="text" class="form-control" id="exampleInputPhone" name="StockQuantity"
-                                           placeholder="Enter stock quantity" value="@Model.StockQuantity">
                                 </div>
 
                                 @* <div class="form-group"> *@
@@ -148,29 +142,8 @@
 
                                 @* </div> *@
 
-                                <div class="form-group text-center">
-                                    <label class="form-label fw-bold">Product Image</label>
-                                    <div class="upload-container" onclick="document.getElementById('fileInput').click()">
-                                        <img id="previewImage" src="@(Model.Image != null ? Url.Content("~/images/" + Model.Image) : "/images/Default.png")" alt="Preview" />
-                                        <div class="upload-overlay">
-                                            <i class="bi bi-cloud-upload fs-1"></i>
-                                            <p>Click to select image</p>
-                                        </div>
-                                    </div>
-                                    <input type="file" id="fileInput" name="Img" accept="image/*" onchange="previewFile(this)" hidden />
-                                </div>
-
-                                <input hidden type="date" class="form-control" id="exampleInputBirthday" name="BirthDay"
-                                       value="@(Model.CreatedAt.ToString("yyyy-MM-dd"))">
-
-                                <input hidden type="date" class="form-control" id="exampleInputBirthday" name="BirthDay"
-                                       value="@(Model.UpdatedAt.ToString("yyyy-MM-dd"))">
-
-                                
-
-
                                 <button type="submit" class="btn btn-primary mr-2">Save Changes</button>
-                                <a href="@Url.Action("Index", "Product")" class="btn btn-dark">Cancel</a>
+                                <a href="@Url.Action("Index", "ProductVariant")" class="btn btn-dark">Cancel</a>
                             </form>
                         </div>
                     </div>

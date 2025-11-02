@@ -36,14 +36,14 @@
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="page-header">
-                <h3 class="page-title"> Account Tables </h3>
+                <h3 class="page-title"> Product Tables </h3>
             </div>
             <div class="row">
 
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Accounts</h4>
+                            <h4 class="card-title">Products</h4>
 
                             <div class="table-responsive">
                                 @if (TempData["Message"] != null)
@@ -71,7 +71,9 @@
                                     <tbody>
                                         @for (int i = 0; i < Model.Count; i++)
                                         {
-                                            <tr>
+                                            var product = Model[i];
+
+                                            <tr id="productRow_@product.Id">
                                                 <td> @Model[i].ProductName </td>
                                                 <td>
                                                     @String.Format("{0:N0}₫", @Model[i].Price)
@@ -97,7 +99,7 @@
                                                                     Edit
                                                                 </a>
                                                             </li>
-                                                            <li><button class="dropdown-item text-danger" type="button">Block</button></li>
+                                                            <li><button class="dropdown-item text-danger btn-delete" data-id="@product.Id">Delete</button></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -152,5 +154,99 @@
     <!-- endinject -->
     <!-- Custom js for this page -->
     <!-- End custom js for this page -->
+
+    <div id="toast-container"></div>
+
+    <style>
+        /* Container cố định góc trên phải */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 33px;
+            text-align: center;
+        }
+
+        /* Toast cơ bản */
+        .toast {
+            min-width: 200px;
+            max-width: 300px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            color: #fff;
+            font-family: sans-serif;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            /* Màu sắc theo loại toast */
+            .toast.success {
+                background-Product: #28a745;
+            }
+
+            .toast.danger {
+                background-Product: #dc3545;
+            }
+
+            .toast.warning {
+                background-Product: #ffc107;
+                Product: #000;
+            }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            // Click Delete
+            $('.btn-delete').click(function () {
+                var id = $(this).data('id');
+                if (!confirm("Are you sure you want to delete this product?")) return;
+
+                $.ajax({
+                    url: '/Admin/Product/Delete/' + id,
+                    type: 'POST',
+                    success: function (response) {
+                        if (response.success) {
+                            $('#productRow_' + id).remove();
+                            showToast(response.message, 'success');
+                        } else {
+                            showToast(response.message, 'danger');
+                        }
+                    },
+                    error: function () {
+                        showToast("System error.", 'danger');
+                    }
+                });
+            });
+
+            // Toast function
+                    function showToast(message, type = 'success', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+
+            // Cho hiệu ứng xuất hiện
+            setTimeout(() => toast.classList.add('show'), 50);
+
+            // Tự động ẩn
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => container.removeChild(toast), 300);
+            }, duration);
+        }
+        });
+    </script>
 </body>
 </html>
