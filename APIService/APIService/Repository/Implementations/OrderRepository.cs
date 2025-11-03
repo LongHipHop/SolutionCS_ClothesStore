@@ -34,5 +34,14 @@ namespace APIService.Repository.Implementations
         {
             return FindAll(false).ToListAsync();
         }
+
+        public async Task<Orders> GetOrderDetailById(int id)
+        {
+            return await _context.Orders
+                .Include(o => o.Payments)
+                .Include(o => o.Shipments)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(o => o.Id == id);
+        }
     }
 }

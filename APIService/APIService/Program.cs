@@ -84,6 +84,11 @@ builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IProductVariantService, ProductVariantService>();
 builder.Services.AddScoped<ISizeRepository, SizeRepostiory>();
 builder.Services.AddScoped<ISizeService, SizeService>();
+builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
+builder.Services.AddScoped<IShipmentService, ShipmentService>();
+builder.Services.AddScoped<IShippingProviderRepository, ShippingProviderRepository>();
+builder.Services.AddScoped<IShippingProviderService, ShippingProviderService>();
+
 builder.Services.AddHostedService<EmailCleanupService>();
 
 
