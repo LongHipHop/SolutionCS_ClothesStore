@@ -16,43 +16,9 @@ namespace CS_ClothesStore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> OrderSuccess(int orderId)
+        public IActionResult OrderSuccess()
         {
-            if (orderId <= 0)
-            {
-                TempData["Error"] = "Invalid order ID.";
-                return RedirectToAction("Index", "ShoppingCart");
-            }
-
-            try
-            {
-                var response = await _httpClient.GetAsync($"{_apiUrl}/Order/GetById/{orderId}");
-                if (!response.IsSuccessStatusCode)
-                {
-                    TempData["Error"] = "Cannot load order details.";
-                    return RedirectToAction("Index", "ShoppingCart");
-                }
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var apiResponse = JsonSerializer.Deserialize<APIResponse<OrderDTO>>(
-                    responseBody,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                );
-
-                if (apiResponse?.Code == "1000" && apiResponse.Result != null)
-                {
-                    return View(apiResponse.Result);
-                }
-
-                TempData["Error"] = "Order not found.";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading order success page: {ex.Message}");
-                TempData["Error"] = "Something went wrong.";
-            }
-
-            return RedirectToAction("Index", "ShoppingCart");
+            return View();
         }
     }
 }
