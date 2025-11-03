@@ -21,9 +21,18 @@ namespace CS_ClothesStore.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var viewModel = new ShoppingCartViewModel();
+            ViewBag.Message = "";
+            ViewBag.MessageType = "";
 
+            var token = HttpContext.Session.GetString("JWTToken");
             var userJson = HttpContext.Session.GetString("UserInfo");
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userJson))
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
+            var viewModel = new ShoppingCartViewModel();
 
             var user = JsonSerializer.Deserialize<AccountDTO>(userJson);
 
@@ -58,12 +67,20 @@ namespace CS_ClothesStore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProceedToCheckout([FromBody] CheckoutDTO dto)
+        public async Task<IActionResult> ProceedToCheckout()
         {
+            using var reader = new StreamReader(Request.Body);
+            var body = await reader.ReadToEndAsync();
+
+            var dto = JsonSerializer.Deserialize<CheckoutDTO>(body, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
             if (dto == null || dto.SelectedItems == null || !dto.SelectedItems.Any())
             {
                 TempData["Error"] = "No items selected.";
-                return RedirectToAction("Index");
+                return Json(new { Code = "1002", Result = "No items selected." });
             }
 
             try
@@ -77,25 +94,19 @@ namespace CS_ClothesStore.Controllers
 
                     if (apiResponse?.Code == "1000")
                     {
-                        TempData["Success"] = "Checkout successfully!";
-                        var orderId = ((JsonElement)apiResponse.Result).GetProperty("Order").GetInt32();
-                        return RedirectToAction("OrderSuccess", new { orderId });
+                        return Json(new { Code = "1000", Result = apiResponse.Result });
                     }
 
-                    TempData["Error"] = "Checkout failed: " + apiResponse?.Result;
+                    return Json(new { Code = "1001", Result = apiResponse?.Result ?? "Checkout failed." });
                 }
-                else
-                {
-                    TempData["Error"] = "Can't connect with API!";
-                }
+
+                return Json(new { Code = "1003", Result = "Can't connect with API!" });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Checkout error: {ex.Message}");
-                TempData["Error"] = "Error occurred.";
+                return Json(new { Code = "9999", Result = "Error occurred." });
             }
-
-            return RedirectToAction("Index");
         }
 
     }

@@ -58,6 +58,8 @@ namespace APIService.Models.AutoMapper
             CreateMap<OrderDTO, Orders>();
 
             CreateMap<Shipments, ShipmentCUDTO>().ReverseMap();
+
+            CreateMap<ShippingProviders, ShippingProviderDTO>().ReverseMap();
         }
     }
 }

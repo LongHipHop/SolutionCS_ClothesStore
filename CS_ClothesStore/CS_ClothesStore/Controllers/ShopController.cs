@@ -23,6 +23,17 @@ namespace CS_ClothesStore.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Message = "";
+            ViewBag.MessageType = "";
+
+            var token = HttpContext.Session.GetString("JWTToken");
+            var userJson = HttpContext.Session.GetString("UserInfo");
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userJson))
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
+
             var productResponse = await _httpClient.GetAsync($"{_apiUrl}/Product/GetAll");
             var list = new List<ProductDTO>();
             if (!productResponse.IsSuccessStatusCode)
