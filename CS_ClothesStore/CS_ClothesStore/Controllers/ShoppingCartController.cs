@@ -94,18 +94,18 @@ namespace CS_ClothesStore.Controllers
 
                     if (apiResponse?.Code == "1000")
                     {
-                        return Json(new { Code = "1000", Result = apiResponse.Result });
+                        return Json(new { code = "1000"});
                     }
 
-                    return Json(new { Code = "1001", Result = apiResponse?.Result ?? "Checkout failed." });
+                    return Json(new { code = "1001", result = apiResponse?.Result ?? "Checkout failed." });
                 }
 
-                return Json(new { Code = "1003", Result = "Can't connect with API!" });
+                return Json(new { code = "1003", result = "Can't connect with API!" });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Checkout error: {ex.Message}");
-                return Json(new { Code = "9999", Result = "Error occurred." });
+                return Json(new { code = "9999", result = "Error occurred." });
             }
         }
 

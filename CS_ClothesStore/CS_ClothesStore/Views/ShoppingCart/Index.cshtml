@@ -400,33 +400,46 @@
 
 				console.log("Checkout DTO:", dto);
 
-				try {
-					const response = await fetch("/ShoppingCart/ProceedToCheckout", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(dto)
-					});
+									try {
+			const response = await fetch("/ShoppingCart/ProceedToCheckout", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(dto)
+			});
 
-					const resText = await response.text();
-					const resJson = JSON.parse(resText);
+			const resText = await response.text();
+			console.log("🧩 Raw server response:", resText);
 
-					if (resJson.Code === "1000") {
-						alert("✅ Order created successfully!");
-						window.location.href = `/Order/OrderSuccess?orderId=${resJson.Result.Order}`;
-					} else {
-						alert("❌ " + resJson.Result);
-					}
-				} catch (err) {
-					console.error(err);
-					alert("Error during checkout. Please try again.");
-				}
+			let resJson;
+			try {
+				resJson = JSON.parse(resText);
+			} catch (e) {
+				console.error("⚠️ JSON parse error:", e);
+				alert("Server returned invalid JSON format!");
+				return;
+			}
+
+			console.log("✅ Parsed JSON:", resJson);
+
+			const code = resJson.Code ?? resJson.code;
+			const result = resJson.Result ?? resJson.result;
+
+			if (code === "1000") {
+				alert("✅ Order created successfully!");
+				window.location.href = `/Order/OrderSuccess`;
+			} else {
+				alert("❌ " + (result || "Unexpected error"));
+			}
+		} catch (err) {
+			console.error("🔥 Fetch error:", err);
+			alert("Error during checkout. Please try again.");
+		}
+
 			});
 		});
 	</script>
 
 
-	<!--===============================================================================================-->
-	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
 	<!--===============================================================================================-->
 	<script src="vendor/animsition/js/animsition.min.js"></script>
 	<!--===============================================================================================-->
